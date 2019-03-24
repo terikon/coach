@@ -1,0 +1,49 @@
+<xml>
+  <DefaultWindowEnumeration>
+    <IncludeShellWindow value="False" />
+    <IncludeInvisibleWindows value="False" />
+    <IncludeOnlyMainWindows value="False" />
+    <IncludeMinimizedWindows value="True" />
+    <IncludeMaximizedWindows value="True" />
+    <IncludeWindowsWithoutTitle value="True" />
+  </DefaultWindowEnumeration>
+  <AppBehavior>
+    <ConfirmExit value="True" />
+    <ConfirmRemoveLayout value="True" />
+    <ConfirmRemoveLayoutItem value="True" />
+    <ConfirmActionlessLayoutItem value="True" />
+    <CaseSensitiveCompare value="False" />
+    <ControlColoring value="True" />
+    <ShowRestoreLayoutDialog value="False" />
+    <VersionCheckStartup value="True" />
+    <CaptureOnlyMainWindows value="False" />
+    <CaptureIncludesProcessName value="True" />
+    <CaptureIncludesProcessFileName value="False" />
+    <CaptureIncludesClassName value="False" />
+    <CaptureIgnoreProcessNames value="explorer,rundll32" />
+  </AppBehavior>
+  <AppVariables>
+    <ReservedScrollBarWidth value="24" />
+    <RestoreLayoutTimeout value="20" />
+    <VersionURL value="http://www.stefandidak.com/wilma/version.txt" />
+  </AppVariables>
+  <AppHotkey>
+    <AllEnabled value="True" />
+    <LayoutsEnabled value="True" />
+    <WindowsEnabled value="True" />
+    <TrayEnabled value="False" />
+    <TrayKey value="Home" />
+    <TrayKeyWindows value="True" />
+    <TrayKeyShift value="False" />
+    <TrayKeyControl value="True" />
+    <PopupEnabled value="False" />
+    <PopupKey value="F12" />
+    <PopupKeyWindows value="True" />
+    <PopupKeyShift value="False" />
+    <PopupKeyControl value="True" />
+  </AppHotkey>
+  <AppHotkeyAlt>
+    <TrayKeyAlt value="True" />
+    <PopupKeyAlt value="True" />
+  </AppHotkeyAlt>
+</xml>
