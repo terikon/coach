@@ -1,0 +1,61 @@
+<html>
+<title>Self camera</title>
+
+<head>
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: black;
+        }
+
+        html {
+            display: table;
+            margin: auto;
+        }
+
+        body {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .video {
+            width: 100%;
+            transform: scaleX(-1);
+        }
+    </style>
+    <script>
+        window.addEventListener('load', () => {
+
+            var video = document.getElementById('video');
+
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.enumerateDevices().then(
+                    devices => {
+                        var videoDevices = devices.filter(d => d.kind === 'videoinput');
+                        var deviceId = videoDevices[1].deviceId;
+
+                        // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+                        navigator.mediaDevices.getUserMedia({
+                            video: {
+                                deviceId: deviceId,
+                                width: 1920,
+                                height: 1080,
+                                facingMode: 'environment', // 'user' or 'environment'
+                            },
+                        }).then(stream => {
+                            //video.src = window.URL.createObjectURL(stream);
+                            video.srcObject = stream;
+                            video.play();
+                        });
+                    });
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <video id="video" class="video" autoplay></video>
+</body>
+
+</html>
