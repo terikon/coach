@@ -20,7 +20,7 @@
     <CaptureIncludesProcessName value="True" />
     <CaptureIncludesProcessFileName value="False" />
     <CaptureIncludesClassName value="False" />
-    <CaptureIgnoreProcessNames value="explorer,rundll32" />
+    <CaptureIgnoreProcessNames value="explorer,rundll32,ShellExperienceHost,WinLayoutManager,mstsc,ApplicationFrameHost,TOTALCMD64,SystemSettings" />
   </AppBehavior>
   <AppVariables>
     <ReservedScrollBarWidth value="24" />
