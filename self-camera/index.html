@@ -33,7 +33,7 @@
                 navigator.mediaDevices.enumerateDevices().then(
                     devices => {
                         var videoDevices = devices.filter(d => d.kind === 'videoinput');
-                        var deviceId = videoDevices[1].deviceId;
+                        var deviceId = videoDevices[5].deviceId;
 
                         // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
                         navigator.mediaDevices.getUserMedia({
