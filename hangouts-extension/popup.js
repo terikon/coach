@@ -11,7 +11,8 @@ chrome.storage.sync.get('color', function (data) {
     }, function (tabs) {
       chrome.tabs.executeScript(
         tabs[0].id, {
-          code: 'document.body.style.backgroundColor = "' + color + '";'
+          //code: 'document.body.style.backgroundColor = "' + color + '";'
+          code: `document.querySelector('div[aria-label*="video on the main screen"]').parentElement.remove();`
         });
     });
   };
