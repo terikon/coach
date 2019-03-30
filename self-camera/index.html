@@ -30,9 +30,18 @@
             top: 0;
             right: 0;
             opacity: 0;
+            animation: fadeout 3s;
         }
         .cameras:hover {
             opacity: 1;
+        }
+        @keyframes fadein {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes fadeout {
+            from { opacity: 1; }
+            to   { opacity: 0; }
         }
     </style>
     <script>
@@ -72,7 +81,13 @@
                         camerasElement.addEventListener('change', function () {
                             let deviceId = this.value;
                             setCamera(deviceId);
+                            localStorage.deviceId = deviceId;
                         });
+
+                        if (localStorage.deviceId) {
+                            setCamera(localStorage.deviceId);
+                            camerasElement.value = localStorage.deviceId;
+                        }
                        
                     });
             }
