@@ -23,31 +23,57 @@
             width: 100%;
             transform: scaleX(-1);
         }
+
+        .cameras {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            opacity: 0;
+        }
+        .cameras:hover {
+            opacity: 1;
+        }
     </style>
     <script>
         window.addEventListener('load', () => {
 
-            var video = document.getElementById('video');
+            let videoElement = document.getElementById('video');
+            let camerasElement = document.getElementById('cameras');
+
+            function setCamera(deviceId) {
+                // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+                navigator.mediaDevices.getUserMedia({
+                    video: {
+                        deviceId: deviceId,
+                        width: 1920,
+                        height: 1080,
+                        facingMode: 'environment', // 'user' or 'environment'
+                    },
+                }).then(stream => {
+                    //video.src = window.URL.createObjectURL(stream);
+                    videoElement.srcObject = stream;
+                    videoElement.play();
+                });
+            }
 
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.enumerateDevices().then(
                     devices => {
-                        var videoDevices = devices.filter(d => d.kind === 'videoinput');
-                        var deviceId = videoDevices[5].deviceId;
+                        let videoDevices = devices.filter(d => d.kind === 'videoinput');
 
-                        // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-                        navigator.mediaDevices.getUserMedia({
-                            video: {
-                                deviceId: deviceId,
-                                width: 1920,
-                                height: 1080,
-                                facingMode: 'environment', // 'user' or 'environment'
-                            },
-                        }).then(stream => {
-                            //video.src = window.URL.createObjectURL(stream);
-                            video.srcObject = stream;
-                            video.play();
+                        videoDevices.forEach((dev,i) => {
+                            let option = document.createElement("option");
+                            option.value = dev.deviceId;
+                            option.text = i;
+                            camerasElement.appendChild(option);
                         });
+
+                        camerasElement.addEventListener('change', function () {
+                            let deviceId = this.value;
+                            setCamera(deviceId);
+                        });
+                       
                     });
             }
         });
@@ -55,6 +81,7 @@
 </head>
 
 <body>
+    <select id="cameras" class="cameras"></select>
     <video id="video" class="video" autoplay></video>
 </body>
 
