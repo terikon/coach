@@ -1,4 +1,5 @@
 let changeColor = document.getElementById('changeColor');
+let selectTitle = document.getElementById('selectTitle');
 
 chrome.storage.sync.get('color', function (data) {
   changeColor.style.backgroundColor = data.color;
@@ -16,4 +17,21 @@ chrome.storage.sync.get('color', function (data) {
         });
     });
   };
+});
+
+selectTitle.addEventListener('change', function () {
+  let selected = this.value;
+  let title = 'Hangouts Video Call';
+  if (selected > 0) {
+    title += ` - ${selected}`;
+  }
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function (tabs) {
+    chrome.tabs.executeScript(
+      tabs[0].id, {
+        code: `document.title = '${title}';`
+      });
+  });
 });
