@@ -23,7 +23,7 @@ selectTitle.addEventListener('change', function () {
   let selected = this.value;
   let title = 'Hangouts Video Call';
   if (selected > 0) {
-    title += ` - ${selected}`;
+    title = `Student - ${selected}`;
   }
   chrome.tabs.query({
     active: true,
