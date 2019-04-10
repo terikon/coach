@@ -68,13 +68,17 @@
 
                 let file = [...ev.dataTransfer.items].find(x=>x.kind === 'file').getAsFile();
                 console.log('... file.name = ' + file.name);
+
+                videoElement.src = URL.createObjectURL(file);
             });
         });
     </script>
 </head>
 
 <body>
-    <video id="video" class="video"></video>
+    <video id="video" class="video" controls>
+        <p>Your browser doesn't support HTML5 video</p>
+    </video>
 </body>
 
 </html>
