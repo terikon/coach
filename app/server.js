@@ -1,14 +1,18 @@
 'use strict';
 
+const port = 8080;
+
 var os = require('os');
 var nodeStatic = require('node-static');
 var http = require('http');
 var socketIO = require('socket.io');
 
+console.log(`starting server on port ${port}`);
+
 var fileServer = new(nodeStatic.Server)();
 var app = http.createServer(function(req, res) {
   fileServer.serve(req, res);
-}).listen(8080);
+}).listen(port);
 
 var io = socketIO.listen(app);
 io.sockets.on('connection', function(socket) {
@@ -18,6 +22,7 @@ io.sockets.on('connection', function(socket) {
     var array = ['Message from server:'];
     array.push.apply(array, arguments);
     socket.emit('log', array);
+    console.log(arguments);
   }
 
   socket.on('message', function(message) {
