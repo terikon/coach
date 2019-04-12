@@ -55,7 +55,7 @@
     <script>
         window.addEventListener('load', () => {
 
-            let videoElement = document.getElementById('video');
+            let videoElement = document.querySelector('.video');
 
             videoElement.addEventListener('dragover', function(ev) {
                 ev.preventDefault();
@@ -78,9 +78,12 @@
 </head>
 
 <body>
-    <video id="video" class="video" controls>
+    <video class="video" controls>
         <p>Your browser doesn't support HTML5 video</p>
     </video>
 </body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 
 </html>

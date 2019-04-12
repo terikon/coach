@@ -75,8 +75,8 @@
     <script>
         window.addEventListener('load', () => {
 
-            let videoElement = document.getElementById('video');
-            let camerasElement = document.getElementById('cameras');
+            let videoElement = document.querySelector('.video');
+            let camerasElement = document.querySelector('.cameras');
 
             function setCamera(deviceId) {
                 // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
@@ -124,8 +124,8 @@
 </head>
 
 <body>
-    <select id="cameras" class="cameras"></select>
-    <video id="video" class="video" autoplay></video>
+    <select class="cameras"></select>
+    <video class="video" autoplay></video>
 </body>
 
 </html>
