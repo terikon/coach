@@ -52,38 +52,16 @@
         }
 
     </style>
-    <script>
-        window.addEventListener('load', () => {
-
-            let videoElement = document.querySelector('.video');
-
-            videoElement.addEventListener('dragover', function(ev) {
-                ev.preventDefault();
-            });
-
-            videoElement.addEventListener('drop', function(ev) {
-                ev.preventDefault();
-                ev.stopPropagation();
-                console.log('drop ' +JSON.stringify(this) );
-
-                let file = [...ev.dataTransfer.items].find(x=>x.kind === 'file').getAsFile();
-                console.log('... file.name = ' + file.name);
-
-                // https://www.w3schools.com/tags/ref_av_dom.asp
-
-                videoElement.src = URL.createObjectURL(file);
-            });
-        });
-    </script>
 </head>
 
 <body>
     <video class="video" controls>
-        <p>Your browser doesn't support HTML5 video</p>
+        <p>Browser doesn't support HTML5 video</p>
     </video>
 </body>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="video.js"></script>
 
 </html>
