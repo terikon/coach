@@ -62,7 +62,7 @@ window.addEventListener('load', () => {
     }
 
     function onSeeked() {
-        console.log('seeked');
+        console.log(`seeked to ${videoElement.currentTime}`);
     }
 
     function sendData(data) {
