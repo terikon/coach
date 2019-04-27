@@ -2,6 +2,9 @@ window.addEventListener('load', () => {
 
     let videoElement = document.querySelector('.video');
     let camerasElement = document.querySelector('.cameras');
+    let mirrorButtonElement = document.querySelector('.mirrorbutton');
+
+    let mirror;
 
     function setCamera(deviceId) {
         // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
@@ -37,9 +40,20 @@ window.addEventListener('load', () => {
                     localStorage.deviceId = deviceId;
                 });
 
+                mirrorButtonElement.addEventListener('click', function () {
+                    mirror = !mirror;
+                    localStorage.mirror = mirror;
+                    videoElement.classList.toggle("mirror");
+                });
+
                 if (localStorage.deviceId) {
                     setCamera(localStorage.deviceId);
                     camerasElement.value = localStorage.deviceId;
+                }
+
+                if (localStorage.mirror === "true") {
+                    mirror = true;
+                    videoElement.classList.add("mirror");
                 }
                
             });
