@@ -21,11 +21,14 @@
 
         .video {
             position: fixed;
-            transform: scaleX(-1);
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+        }
+
+        .mirror {
+            transform: scaleX(-1);
         }
 
         /* https://fvsch.com/video-background/ */
@@ -52,7 +55,7 @@
             }
         }
 
-        .cameras {
+        .controls {
             position: absolute;
             z-index: 1;
             top: 0;
@@ -60,7 +63,7 @@
             opacity: 0;
             animation: fadeout 3s;
         }
-        .cameras:hover {
+        .controls:hover {
             opacity: 1;
         }
         @keyframes fadein {
@@ -75,7 +78,10 @@
 </head>
 
 <body>
-    <select class="cameras"></select>
+    <div class="controls">
+        <select class="cameras"></select>
+        <button class="mirrorbutton">toggle mirror</button>
+    </div>
     <video class="video" autoplay>
         <p>Browser doesn't support HTML5 video</p>
     </video>
