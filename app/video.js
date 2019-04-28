@@ -98,7 +98,8 @@ window.addEventListener('load', () => {
 
     var room = window.location.hash.substring(1);
     if (!room) {
-        room = window.location.hash = randomToken();
+        //room = window.location.hash = randomToken();
+        room = window.location.hash = "room1";
     }
 
     socket.on('ipaddr', function (ipaddr) {

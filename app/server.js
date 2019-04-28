@@ -9,7 +9,7 @@ var socketIO = require('socket.io');
 
 console.log(`starting server on port ${port}`);
 
-var fileServer = new(nodeStatic.Server)();
+var fileServer = new nodeStatic.Server();
 var app = http.createServer(function (req, res) {
   fileServer.serve(req, res);
 }).listen(port);
@@ -22,7 +22,7 @@ io.sockets.on('connection', function (socket) {
     var array = ['Message from server:'];
     array.push.apply(array, arguments);
     socket.emit('log', array);
-    console.log(arguments);
+    console.log([...arguments]);
   }
 
   socket.on('message', function (message) {
