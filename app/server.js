@@ -17,6 +17,10 @@ var app = http.createServer(function (req, res) {
 var io = socketIO.listen(app);
 io.sockets.on('connection', function (socket) {
 
+  // io.emit - sent to everyone
+  // socket.emit - only to socket
+  // socket.broadcast.emit - to everyone except socket
+
   // convenience function to log server messages on the client
   function log() {
     var array = ['Message from server:'];
