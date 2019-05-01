@@ -1,5 +1,7 @@
 'use strict';
 
+const useRTC = false;
+
 window.addEventListener('load', () => {
 
     let videoElement = document.querySelector('.video');
@@ -71,7 +73,13 @@ window.addEventListener('load', () => {
     }
 
     function sendData(data) {
-        console.log(`Sending data ${data}`);
+        let serialized = JSON.stringify(data);
+        console.log(`Sending data ${serialized}`);
+
+        if (!useRTC) {
+            socket.emit('player', serialized);
+            return;
+        }
 
         if (!dataChannel) {
             trace('Connection has not been initiated. ' + 'Get two peers in the same room first');
@@ -81,19 +89,19 @@ window.addEventListener('load', () => {
             return;
         }
 
-        dataChannel.send(JSON.stringify(data));
+        dataChannel.send(serialized);
     }
 
 
 
-    // var configuration = {
-    //   'iceServers': [{
-    //     'urls': 'stun:stun.l.google.com:19302'
-    //   }]
-    // };
-    let configuration = null;
+    var configuration = {
+      'iceServers': [{
+        'urls': 'stun:stun.l.google.com:19302'
+      }]
+    };
+    //let configuration = null;
 
-    let socket = io.connect();
+    var socket = io.connect();
     let isInitiator = false;
 
     var room = window.location.hash.substring(1);
@@ -163,6 +171,14 @@ window.addEventListener('load', () => {
             window.location.reload();
         }
     });
+
+    if (!useRTC) {
+        socket.on('player', data => {
+            let event = new Event('player');
+            event.data = data;
+            onData(event);
+        });
+    }
 
     window.addEventListener('unload', function () {
         console.log(`Unloading window. Notifying peers in ${room}.`);

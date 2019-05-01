@@ -77,4 +77,10 @@ io.sockets.on('connection', function (socket) {
   socket.on('bye', function (room) {
     console.log(`Peer said bye on room ${room}.`);
   });
+
+  socket.on('player', data => {
+    console.log(`player ${data}.`);
+    socket.broadcast.emit('player', data);
+  });
+
 });
