@@ -2,9 +2,11 @@ window.addEventListener('load', () => {
 
     let videoElement = document.querySelector('#video');
     let camerasElement = document.querySelector('.cameras');
+    let trainercontrolsElement = document.querySelector('.trainercontrols');
     let mirrorButtonElement = document.querySelector('.mirrorbutton');
+    let trainerButtonElement = document.querySelector('.trainerbutton');
 
-    let mirror;
+    let mirror, trainer;
 
     function setCamera(deviceId) {
         // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
@@ -46,6 +48,12 @@ window.addEventListener('load', () => {
                     videoElement.classList.toggle("mirror");
                 });
 
+                trainerButtonElement.addEventListener('click', function () {
+                    trainer = !trainer;
+                    localStorage.trainer = trainer;
+                    trainercontrolsElement.style.display = trainer ? "block" : "none";
+                });
+
                 if (localStorage.deviceId) {
                     setCamera(localStorage.deviceId);
                     camerasElement.value = localStorage.deviceId;
@@ -55,6 +63,11 @@ window.addEventListener('load', () => {
                     mirror = true;
                     videoElement.classList.add("mirror");
                 }
+
+                if (localStorage.trainer === "true") {
+                    trainer = true;
+                }
+                trainercontrolsElement.style.display = trainer ? "block" : "none";
                
             });
     }
