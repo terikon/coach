@@ -1,6 +1,6 @@
 window.addEventListener('load', () => {
 
-    let videoElement = document.querySelector('.video');
+    let videoElement = document.querySelector('#video');
     let camerasElement = document.querySelector('.cameras');
     let mirrorButtonElement = document.querySelector('.mirrorbutton');
 

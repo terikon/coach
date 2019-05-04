@@ -74,6 +74,12 @@
             from { opacity: 1; }
             to   { opacity: 0; }
         }
+
+        .trainercontrols {
+            object-fit: unset;
+            pointer-events:none;
+            height: auto;
+        }
     </style>
 </head>
 
@@ -82,9 +88,10 @@
         <select class="cameras"></select>
         <button class="mirrorbutton">toggle mirror</button>
     </div>
-    <video class="video" autoplay>
+    <video class="video" id="video" autoplay>
         <p>Browser doesn't support HTML5 video</p>
     </video>
+    <img src="images/trainer-layers.png" class="video trainercontrols" />
 </body>
 
 <script src="camera.js"></script>
