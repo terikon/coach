@@ -4,6 +4,7 @@ const useRTC = false;
 
 window.addEventListener('load', () => {
 
+    /** @type HTMLVideoElement */
     let videoElement = document.querySelector('.video');
 
     videoElement.addEventListener('dragover', function (ev) {
@@ -183,6 +184,23 @@ window.addEventListener('load', () => {
     window.addEventListener('unload', function () {
         console.log(`Unloading window. Notifying peers in ${room}.`);
         socket.emit('bye', room);
+    });
+
+    let windowHeight = window.innerHeight;
+    let windowWidth = window.innerWidth;
+
+    window.addEventListener('resize', function (event) {
+        // Will toggle audio if size changes for 1 px
+
+        let newWindowHeight = window.innerHeight;
+        let newWindowWidth = window.innerWidth;
+        
+        if (Math.abs(newWindowHeight - windowHeight) === 1 || Math.abs(newWindowWidth - windowWidth) === 1) {
+            videoElement.muted = !videoElement.muted;
+        }
+
+        windowHeight = newWindowHeight;
+        windowWidth = newWindowWidth;
     });
 
     function sendMessage(message) {
