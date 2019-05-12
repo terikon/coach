@@ -13,7 +13,7 @@ chrome.storage.sync.get('color', function (data) {
       chrome.tabs.executeScript(
         tabs[0].id, {
           //code: 'document.body.style.backgroundColor = "' + color + '";'
-          file: 'contentScript.js'
+          file: 'contentScript-toggleOthers.js'
         });
     });
   };
