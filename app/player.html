@@ -51,6 +51,26 @@
             }
         }
 
+        .infobox {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            pointer-events: none;
+            background-color: white;
+            opacity: 0;
+        }
+
+        .on {
+            opacity: 1;
+            animation: fadeout 3s forwards;
+        }
+
+        @keyframes fadeout {
+            from { opacity: 1; }
+            50%  { opacity: 1; }
+            to   { opacity: 0; }
+        }
+
     </style>
 </head>
 
@@ -58,6 +78,9 @@
     <video class="video" controls>
         <p>Browser doesn't support HTML5 video</p>
     </video>
+    <div id="infobox" class="infobox">
+        Info box
+    </div>
 </body>
 
 <script src="/socket.io/socket.io.js"></script>

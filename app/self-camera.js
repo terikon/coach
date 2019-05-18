@@ -1,10 +1,11 @@
 window.addEventListener('load', () => {
 
-    let videoElement = document.querySelector('#video');
-    let camerasElement = document.querySelector('.cameras');
-    let trainercontrolsElement = document.querySelector('.trainercontrols');
-    let mirrorButtonElement = document.querySelector('.mirrorbutton');
-    let trainerButtonElement = document.querySelector('.trainerbutton');
+    /** @type HTMLVideoElement */
+    const videoElement = document.querySelector('#video');
+    const camerasElement = document.querySelector('.cameras');
+    const trainercontrolsElement = document.querySelector('.trainercontrols');
+    const mirrorButtonElement = document.querySelector('.mirrorbutton');
+    const trainerButtonElement = document.querySelector('.trainerbutton');
 
     let mirror, trainer;
 

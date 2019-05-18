@@ -4,11 +4,16 @@ const useRTC = false;
 
 const urlParams = new URLSearchParams(window.location.search);
 const mode = urlParams.get('mode'); // student or coach
+if (mode !== 'student' && mode !== 'coach') {
+    console.log(`INVALID MODE ${mode}`);
+}
 
 window.addEventListener('load', () => {
 
     /** @type HTMLVideoElement */
-    let videoElement = document.querySelector('.video');
+    const videoElement = document.querySelector('.video');
+    /** @type HTMLDivElement */
+    const infoboxElement = document.querySelector('#infobox');
 
     videoElement.addEventListener('dragover', function (ev) {
         ev.preventDefault();
@@ -36,7 +41,7 @@ window.addEventListener('load', () => {
     function onPlay() {
         if (userInitiated) {
             console.log('play');
-            sendData({ command: 'play' });
+            sendData({ command: 'play', currentTime: videoElement.currentTime });
         }
         userInitiated = true;
     }
@@ -44,7 +49,7 @@ window.addEventListener('load', () => {
     function onPause() {
         if (userInitiated) {
             console.log('pause');
-            sendData({ command: 'pause' });
+            sendData({ command: 'pause', currentTime: videoElement.currentTime });
         }
         userInitiated = true;
     }
@@ -65,13 +70,21 @@ window.addEventListener('load', () => {
 
         switch (data.command) {
             case 'play':
+                videoElement.currentTime = data.currentTime;
                 videoElement.play();
                 break;
             case 'pause':
                 videoElement.pause();
+                videoElement.currentTime = data.currentTime;
                 break;
             case 'seek':
                 videoElement.currentTime = data.currentTime;
+                break;
+            case 'layout':
+                if (mode === 'student') {
+                    const layout = data.layout;
+                    displayInfobox(`layout: ${layout}`);
+                }
                 break;
         }        
     }
@@ -133,9 +146,9 @@ window.addEventListener('load', () => {
     });
 
     socket.on('full', function (room) {
-        alert('Room ' + room + ' is full. We will create a new room for you.');
-        window.location.hash = '';
-        window.location.reload();
+        //alert('Room ' + room + ' is full. We will create a new room for you.');
+        //window.location.hash = '';
+        //window.location.reload();
     });
 
     socket.on('ready', function () {
@@ -193,17 +206,30 @@ window.addEventListener('load', () => {
     let windowWidth = window.innerWidth;
 
     window.addEventListener('resize', function (event) {
-        // Will toggle audio if size changes for 1 px
+        if (mode === 'student') {
+            // Will toggle audio if size changes for 1 px
 
-        let newWindowHeight = window.innerHeight;
-        let newWindowWidth = window.innerWidth;
+            let newWindowHeight = window.innerHeight;
+            let newWindowWidth = window.innerWidth;
         
-        if (Math.abs(newWindowHeight - windowHeight) === 1 || Math.abs(newWindowWidth - windowWidth) === 1) {
-            videoElement.muted = !videoElement.muted;
-        }
+            if (Math.abs(newWindowHeight - windowHeight) === 1 || Math.abs(newWindowWidth - windowWidth) === 1) {
+                videoElement.muted = !videoElement.muted;
+            }
 
-        windowHeight = newWindowHeight;
-        windowWidth = newWindowWidth;
+            windowHeight = newWindowHeight;
+            windowWidth = newWindowWidth;
+        } else if (mode === 'coach') {
+            const weight = window.innerWidth;
+            if (weight % 10 === 0) {
+                sendData({ command: 'layout', layout: 'group' });
+            } else if (weight % 10 === 1) {
+                sendData({ command: 'layout', layout: 'student 1' });
+            } else if (weight % 10 === 2) {
+                sendData({ command: 'layout', layout: 'student 2' });
+            } else if (weight % 10 === 3) {
+                sendData({ command: 'layout', layout: 'student 3' });
+            }
+        }
     });
 
     function sendMessage(message) {
@@ -215,22 +241,23 @@ window.addEventListener('load', () => {
     var dataChannel;
 
     function signalingMessageCallback(message) {
-        if (message.type === 'offer') {
-            console.log('Got offer. Sending answer to peer.');
-            peerConn.setRemoteDescription(new RTCSessionDescription(message), function () {},
-                trace);
-            peerConn.createAnswer(onLocalSessionCreated, trace);
+        if (useRTC) {
+            if (message.type === 'offer') {
+                console.log('Got offer. Sending answer to peer.');
+                peerConn.setRemoteDescription(new RTCSessionDescription(message), function () { },
+                    trace);
+                peerConn.createAnswer(onLocalSessionCreated, trace);
 
-        } else if (message.type === 'answer') {
-            console.log('Got answer.');
-            peerConn.setRemoteDescription(new RTCSessionDescription(message), function () {},
-                trace);
+            } else if (message.type === 'answer') {
+                console.log('Got answer.');
+                peerConn.setRemoteDescription(new RTCSessionDescription(message), function () { },
+                    trace);
 
-        } else if (message.type === 'candidate') {
-            peerConn.addIceCandidate(new RTCIceCandidate({
-                candidate: message.candidate
-            }));
-
+            } else if (message.type === 'candidate') {
+                peerConn.addIceCandidate(new RTCIceCandidate({
+                    candidate: message.candidate
+                }));
+            }
         }
     }
 
@@ -293,6 +320,14 @@ window.addEventListener('load', () => {
         }
 
         channel.onmessage = onData;
+    }
+
+    function displayInfobox(msg) {
+        infoboxElement.innerHTML = msg;
+        infoboxElement.classList.remove('on');
+        setTimeout(() => {
+            infoboxElement.classList.add('on');    
+        }, 0);
     }
 
     /*
