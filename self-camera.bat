@@ -1,0 +1,1 @@
+.\app\self-camera.html
