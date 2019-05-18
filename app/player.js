@@ -2,6 +2,9 @@
 
 const useRTC = false;
 
+const urlParams = new URLSearchParams(window.location.search);
+const mode = urlParams.get('mode'); // student or coach
+
 window.addEventListener('load', () => {
 
     /** @type HTMLVideoElement */
