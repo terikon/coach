@@ -15,6 +15,10 @@ window.addEventListener('load', () => {
     /** @type HTMLDivElement */
     const infoboxElement = document.querySelector('#infobox');
 
+    if (mode === 'coach') {
+        videoElement.muted = true;
+    }
+
     videoElement.addEventListener('dragover', function (ev) {
         ev.preventDefault();
     });
@@ -209,8 +213,8 @@ window.addEventListener('load', () => {
         if (mode === 'student') {
             // Will toggle audio if size changes for 1 px
 
-            let newWindowHeight = window.innerHeight;
-            let newWindowWidth = window.innerWidth;
+            let newWindowHeight = window.outerHeight;
+            let newWindowWidth = window.outerWidth;
         
             if (Math.abs(newWindowHeight - windowHeight) === 1 || Math.abs(newWindowWidth - windowWidth) === 1) {
                 videoElement.muted = !videoElement.muted;
@@ -219,14 +223,14 @@ window.addEventListener('load', () => {
             windowHeight = newWindowHeight;
             windowWidth = newWindowWidth;
         } else if (mode === 'coach') {
-            const weight = window.innerWidth;
-            if (weight % 10 === 0) {
+            const width = window.outerWidth;
+            if (width % 10 === 0) {
                 sendData({ command: 'layout', layout: 'group' });
-            } else if (weight % 10 === 1) {
+            } else if (width % 10 === 1) {
                 sendData({ command: 'layout', layout: 'student 1' });
-            } else if (weight % 10 === 2) {
+            } else if (width % 10 === 2) {
                 sendData({ command: 'layout', layout: 'student 2' });
-            } else if (weight % 10 === 3) {
+            } else if (width % 10 === 3) {
                 sendData({ command: 'layout', layout: 'student 3' });
             }
         }
