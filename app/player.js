@@ -3,8 +3,8 @@
 const useRTC = false;
 
 const urlParams = new URLSearchParams(window.location.search);
-const mode = urlParams.get('mode'); // student or coach
-if (mode !== 'student' && mode !== 'coach') {
+const mode = urlParams.get('mode'); // student or teacher
+if (mode !== 'student' && mode !== 'teacher') {
     console.log(`INVALID MODE ${mode}`);
 }
 
@@ -15,7 +15,7 @@ window.addEventListener('load', () => {
     /** @type HTMLDivElement */
     const infoboxElement = document.querySelector('#infobox');
 
-    if (mode === 'coach') {
+    if (mode === 'teacher') {
         videoElement.muted = true;
     }
 
@@ -222,7 +222,7 @@ window.addEventListener('load', () => {
 
             windowHeight = newWindowHeight;
             windowWidth = newWindowWidth;
-        } else if (mode === 'coach') {
+        } else if (mode === 'teacher') {
             const width = window.outerWidth;
             if (width % 10 === 0) {
                 sendData({ command: 'layout', layout: 'group' });
@@ -328,10 +328,10 @@ window.addEventListener('load', () => {
 
     function displayInfobox(msg) {
         infoboxElement.innerHTML = msg;
-        infoboxElement.classList.remove('on');
-        setTimeout(() => {
-            infoboxElement.classList.add('on');    
-        }, 0);
+        // infoboxElement.classList.remove('on');
+        // setTimeout(() => {
+        //     infoboxElement.classList.add('on');    
+        // }, 0);
     }
 
     /*
