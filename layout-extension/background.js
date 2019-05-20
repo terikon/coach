@@ -1,4 +1,7 @@
 chrome.runtime.onInstalled.addListener(function () {
+
+  chrome.browserAction.setTitle({title: 'Styopa'});
+
   chrome.storage.sync.set({
     color: '#3aa757'
   }, function () {
@@ -15,3 +18,5 @@ chrome.runtime.onInstalled.addListener(function () {
     }]);
   });
 });
+
+
