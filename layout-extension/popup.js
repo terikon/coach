@@ -1,10 +1,10 @@
-let changeColor = document.getElementById('changeColor');
-let selectTitle = document.getElementById('selectTitle');
+/**@type HTMLButtonElement*/ const buttonChangeColor = document.getElementById('buttonChangeColor');
+/**@type HTMLSelectElement*/ const selectTitle = document.getElementById('selectTitle');
 
 chrome.storage.sync.get('color', function (data) {
-  changeColor.style.backgroundColor = data.color;
-  changeColor.setAttribute('value', data.color);
-  changeColor.onclick = function (element) {
+  buttonChangeColor.style.backgroundColor = data.color;
+  buttonChangeColor.setAttribute('value', data.color);
+  buttonChangeColor.onclick = function (element) {
     let color = element.target.value;
     chrome.tabs.query({
       active: true,
