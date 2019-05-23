@@ -4,7 +4,9 @@
   "description": "",
   "main": "background.js",
   "dependencies": {
-    "@types/chrome": "0.0.85"
+    "@types/chrome": "0.0.85",
+    "socket.io": "^2.2.0",
+    "webrtc-adapter": "^7.2.3"
   },
   "devDependencies": {},
   "scripts": {

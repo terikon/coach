@@ -4,7 +4,7 @@
   "description": "Manage layout",
   "permissions": ["activeTab", "declarativeContent", "storage"],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["node_modules/socket.io-client/dist/socket.io.js", "node_modules/webrtc-adapter/out/adapter.js", "background.js"],
     "persistent": false
   },
   "browser_action": {
