@@ -1,3 +1,8 @@
+const client = io('http://viskin.dyndns.org:8080');
+const socket = client.connect();
+
+socket.emit('create or join', 'extensionRoom');
+
 chrome.runtime.onInstalled.addListener(function () {
 
   chrome.browserAction.setTitle({ title: 'Styopa' });
