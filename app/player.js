@@ -19,6 +19,10 @@ window.addEventListener('load', () => {
         videoElement.muted = true;
     }
 
+    document.addEventListener('myCustomEvent', ev => {
+        console.log(`myCustomEvent arrived ${JSON.stringify(ev.detail)}`);
+    });
+
     videoElement.addEventListener('dragover', function (ev) {
         ev.preventDefault();
     });

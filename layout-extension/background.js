@@ -60,13 +60,21 @@ function injectScript(/** @type chrome.tabs.Tab */tab, contentScriptName) {
 }
 
 const hangoutsUrlRegex = /https:\/\/hangouts.google.com\/call\//g;
+const playerUrlRegex = /player.html/g;
+
+function injectIfMatches(/** @type chrome.tabs.Tab */tab) {
+  if (tab.url.match(hangoutsUrlRegex)) {
+    injectScript(tab, 'contentScript-hangouts.js');
+  }
+  if (tab.url.match(playerUrlRegex)) {
+    injectScript(tab, 'contentScript-player.js');
+  }
+}
 
 // inject exising windows
 chrome.tabs.query({}, tabs => {
   tabs.forEach(tab => {
-    if (tab.url.match(hangoutsUrlRegex)) {
-      injectScript(tab, 'contentScript-hangouts.js');
-    }
+    injectIfMatches(tab);
   });
 });
 
@@ -76,9 +84,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' /*|| changeInfo.title*/) {
     console.log(`tab ${JSON.stringify(tab)}`);
 
-    if (tab.url.match(hangoutsUrlRegex)) {
-      injectScript(tab, 'contentScript-hangouts.js');
-    }
+    injectIfMatches(tab);
   }
 });
 
@@ -92,8 +98,6 @@ chrome.runtime.onConnect.addListener(port => {
     console.log(`port ${port.name} was disconnected`);
   });
 });
-
-const playerUrlRegex = /player.html/g;
 
 chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
   if (!sender.url.match(playerUrlRegex)) return;
