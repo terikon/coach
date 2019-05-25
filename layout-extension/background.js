@@ -52,9 +52,33 @@ function backgroundPageExport() {
 //   console.log(`tab ${tab.title} created`);
 // });
 
-// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-//   console.log(`tab ${tab} updated: ${JSON.stringify(changeInfo)}`);
-// });
+
+function injectScript(/** @type chrome.tabs.Tab */tab, contentScriptName) {
+  chrome.tabs.executeScript(tab.id, { file: contentScriptName });
+}
+
+const hangoutsUrlRegex = /https:\/\/hangouts.google.com\/call\//g;
+
+// inject exising windows
+chrome.tabs.query({}, tabs => {
+  tabs.forEach(tab => {
+    if (tab.url.match(hangoutsUrlRegex)) {
+      injectScript(tab, 'contentScript-hangouts.js');
+    }
+  });
+});
+
+// inject new windows
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  console.log(`tab ${tab.id} updated: ${JSON.stringify(changeInfo)}`);
+  if (changeInfo.status === 'complete' /*|| changeInfo.title*/) {
+    console.log(`tab ${JSON.stringify(tab)}`);
+
+    if (tab.url.match(hangoutsUrlRegex)) {
+      injectScript(tab, 'contentScript-hangouts.js');
+    }
+  }
+});
 
 // chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
 //   console.log(`tab ${tabId} removed: ${JSON.stringify(removeInfo)}`);
@@ -87,3 +111,15 @@ function backgroundPageExport() {
 // chrome.windows.onRemoved.addListener(windowId => {
 //   console.log(`window ${windowId} removed`);
 // });
+
+
+chrome.runtime.onConnect.addListener(port => {
+  console.assert(port.name === 'myConnection');
+  port.onMessage.addListener(msg => {
+    console.log(`background script got message ${JSON.stringify(msg)}`);
+    //port.postMessage({ message: 'answer from background script' });
+  });
+  port.onDisconnect.addListener(_ => {
+    console.log(`port ${port.name} was disconnected`);
+  });
+});
