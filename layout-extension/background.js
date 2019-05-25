@@ -1,3 +1,9 @@
+chrome.extension.isAllowedFileSchemeAccess(allowed => {
+  if (!allowed) {
+    console.log("Please enable AllowedFileSchemeAccess for the extension in chrome://extensions");
+  }
+});
+
 const client = io('http://viskin.dyndns.org:8080');
 const socket = client.connect();
 

@@ -2,7 +2,7 @@
   "name": "Coach layout extension",
   "version": "0.1",
   "description": "Manage layout",
-  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "permissions": ["activeTab", "declarativeContent", "storage", "contextMenus", "clipboardRead", "contentSettings"],
   "background": {
     "scripts": ["node_modules/socket.io-client/dist/socket.io.js", "node_modules/webrtc-adapter/out/adapter.js", "background.js"],
     "persistent": false
