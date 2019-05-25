@@ -89,19 +89,32 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 });
 
 chrome.runtime.onConnect.addListener(port => {
-  console.assert(port.name === 'myConnection');
-  port.onMessage.addListener(msg => {
-    console.log(`background script got message ${JSON.stringify(msg)}`);
-    //port.postMessage({ message: 'answer from background script' });
-  });
-  port.onDisconnect.addListener(_ => {
-    console.log(`port ${port.name} was disconnected`);
-  });
+
+  if (port.name === 'myConnection') {
+    port.onMessage.addListener(msg => {
+      console.log(`background script got message ${JSON.stringify(msg)}`);
+      //port.postMessage({ message: 'answer from background script' });
+    });
+    port.onDisconnect.addListener(_ => {
+      console.log(`port ${port.name} was disconnected`);
+    });
+  }
+
+  if (port.name === 'playerConnection') {
+    setInterval(() => {
+      port.postMessage({ message: 'from background script to player' });
+    }, 2000);
+
+    port.onDisconnect.addListener(_ => {
+      console.log(`port ${port.name} was disconnected`);
+    });
+  }
+
 });
 
 chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
   if (!sender.url.match(playerUrlRegex)) return;
-  console.log(`background script got external request ${JSON.stringify(request)}`);
+  console.log(`background script got external player request ${JSON.stringify(request)}`);
 });
 
 // chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
