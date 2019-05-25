@@ -47,3 +47,43 @@ chrome.runtime.onInstalled.addListener(function () {
 function backgroundPageExport() {
   console.log('backgroundPageExport called');
 }
+
+// chrome.tabs.onCreated.addListener(tab => {
+//   console.log(`tab ${tab.title} created`);
+// });
+
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+//   console.log(`tab ${tab} updated: ${JSON.stringify(changeInfo)}`);
+// });
+
+// chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+//   console.log(`tab ${tabId} removed: ${JSON.stringify(removeInfo)}`);
+// });
+
+// chrome.tabs.onMoved.addListener((tabId, moveInfo) => { // index moved
+//   const tab = chrome.tabs.get(tabId, tab => {
+//     console.log(`tab ${tab.name} moved: ${JSON.stringify(moveInfo)}`);
+//   });
+// });
+
+// chrome.tabs.query({}, tabs => {
+//   console.log(`all tabs: ${JSON.stringify(tabs)}`);
+// });
+
+
+// chrome.windows.getAll(windows => {
+//   console.log(`all windows: ${JSON.stringify(windows)}`);
+// });
+
+// chrome.windows.onCreated.addListener(window => {
+//   console.log(`window ${window.id} created`);
+
+//   // chrome.windows.update(window.id, {
+//   //   left: 400,
+//   //   top: 400,
+//   // }, _ => { });
+// });
+
+// chrome.windows.onRemoved.addListener(windowId => {
+//   console.log(`window ${windowId} removed`);
+// });
