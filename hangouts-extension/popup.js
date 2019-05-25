@@ -1,5 +1,6 @@
 /**@type HTMLButtonElement*/ const buttonChangeColor = document.getElementById('buttonChangeColor');
 /**@type HTMLButtonElement*/ const buttonToggleMute = document.getElementById('buttonToggleMute');
+/**@type HTMLButtonElement*/ const buttonMessageTest = document.getElementById('buttonMessageTest');
 /**@type HTMLSelectElement*/ const selectTitle = document.getElementById('selectTitle');
 
 chrome.storage.sync.get('color', function (data) {
@@ -29,6 +30,35 @@ buttonToggleMute.addEventListener('click', () => {
       tabs[0].id, {
         file: 'contentScript-toggleMute.js'
       });
+  });
+});
+
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   console.log(`popup script received ${sender.tab ?
+//     "from a content script:" + sender.tab.url :
+//     "from the extension"} message ${JSON.stringify(request)}`);
+//   sendResponse({ farewell: "response" });
+// });
+
+buttonMessageTest.addEventListener('click', () => {
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function (tabs) {
+    // attach content script
+    chrome.tabs.executeScript(
+      tabs[0].id, {
+        file: 'contentScript-messageTest.js'
+      });
+    // send messages to it
+    // setInterval(() => {
+    //   console.log('popup sent message');
+    //   chrome.tabs.sendMessage(tabs[0].id, { greeting: "Hello from popup" }, response => {
+    //     console.log(`popup received response: ${JSON.stringify(response)}`);
+    //   });
+    // }, 2000);
+
+
   });
 });
 
