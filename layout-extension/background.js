@@ -1,3 +1,5 @@
+console.log(`extension ID: ${chrome.runtime.id}`);
+
 chrome.extension.isAllowedFileSchemeAccess(allowed => {
   if (!allowed) {
     console.log("Please enable AllowedFileSchemeAccess for the extension in chrome://extensions");
@@ -80,6 +82,24 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
+chrome.runtime.onConnect.addListener(port => {
+  console.assert(port.name === 'myConnection');
+  port.onMessage.addListener(msg => {
+    console.log(`background script got message ${JSON.stringify(msg)}`);
+    //port.postMessage({ message: 'answer from background script' });
+  });
+  port.onDisconnect.addListener(_ => {
+    console.log(`port ${port.name} was disconnected`);
+  });
+});
+
+const playerUrlRegex = /player.html/g;
+
+chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+  if (!sender.url.match(playerUrlRegex)) return;
+  console.log(`background script got external request ${JSON.stringify(request)}`);
+});
+
 // chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
 //   console.log(`tab ${tabId} removed: ${JSON.stringify(removeInfo)}`);
 // });
@@ -112,14 +132,3 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 //   console.log(`window ${windowId} removed`);
 // });
 
-
-chrome.runtime.onConnect.addListener(port => {
-  console.assert(port.name === 'myConnection');
-  port.onMessage.addListener(msg => {
-    console.log(`background script got message ${JSON.stringify(msg)}`);
-    //port.postMessage({ message: 'answer from background script' });
-  });
-  port.onDisconnect.addListener(_ => {
-    console.log(`port ${port.name} was disconnected`);
-  });
-});

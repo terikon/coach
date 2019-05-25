@@ -3,6 +3,9 @@
   "version": "0.1",
   "description": "Manage layout",
   "permissions": ["tabs", "activeTab", "declarativeContent", "storage", "contextMenus", "clipboardRead", "contentSettings", "http://*/", "https://*/"],
+  "externally_connectable": {
+    "matches": ["*://viskin.dyndns.org/*"]
+  },
   "background": {
     "scripts": ["node_modules/socket.io-client/dist/socket.io.js", "node_modules/webrtc-adapter/out/adapter.js", "background.js"],
     "persistent": false

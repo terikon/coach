@@ -99,6 +99,13 @@ window.addEventListener('load', () => {
 
         if (!useRTC) {
             socket.emit('player', serialized);
+            if (chrome) {
+                chrome.runtime.sendMessage('mcmahbehnlmfonjbpcoblpbbnlohcinp', data, response => {
+                    if (!response.success) {
+                        console.log(`Could not connect to extension`);
+                    }
+                });
+            }
             return;
         }
 
