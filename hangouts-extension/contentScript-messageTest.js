@@ -24,4 +24,6 @@ port.onMessage.addListener(msg => {
   console.log(`content script got message ${JSON.stringify(msg)}`);
 });
 console.log('content script posts message');
-port.postMessage({ message: 'content script sending a message' });
+setInterval(() => {
+  port.postMessage({ message: 'content script sending a message' });
+}, 2000);

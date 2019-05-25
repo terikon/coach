@@ -30,4 +30,7 @@ chrome.runtime.onConnect.addListener(port => {
     console.log(`background script got message ${JSON.stringify(msg)}`);
     port.postMessage({ message: 'answer from background script' });
   });
+  port.onDisconnect.addListener(_ => {
+    console.log(`port ${port.name} was disconnected`);
+  });
 });
