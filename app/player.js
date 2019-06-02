@@ -92,18 +92,36 @@ window.addEventListener('load', () => {
                 if (mode === 'student') {
                     const layout = data.layout;
                     displayInfobox(`layout: ${layout}`);
+                    switch (layout) {
+                        case 'group':
+                            videoElement.muted = false;
+                            hangountsMuteMyself(true);
+                            break;
+                        case 'student 1':
+                            videoElement.muted = true;
+                            hangountsMuteMyself(false);
+                            break;
+                        default:
+                            videoElement.muted = false;
+                            hangountsMuteMyself(true);
+                            break;
+                    }
                 }
                 break;
         }        
     }
 
-    function sendData(data) {
+    function hangountsMuteMyself(mute) {
+        sendData({ command: 'hangountsMuteMyself', mute: mute }, true);
+    }
+
+    function sendData(data, local) {
         let serialized = JSON.stringify(data);
         console.log(`Sending data ${serialized}`);
 
         if (!useRTC) {
             socket.emit('player', serialized);
-            if (chrome) {
+            if (chrome && local) {
                 chrome.runtime.sendMessage('mcmahbehnlmfonjbpcoblpbbnlohcinp', data, response => {
                     if (!response.success) {
                         console.log(`Could not connect to extension`);
@@ -224,15 +242,15 @@ window.addEventListener('load', () => {
         if (mode === 'student') {
             // Will toggle audio if size changes for 1 px
 
-            let newWindowHeight = window.outerHeight;
-            let newWindowWidth = window.outerWidth;
+            // let newWindowHeight = window.outerHeight;
+            // let newWindowWidth = window.outerWidth;
         
-            if (Math.abs(newWindowHeight - windowHeight) === 1 || Math.abs(newWindowWidth - windowWidth) === 1) {
-                videoElement.muted = !videoElement.muted;
-            }
+            // if (Math.abs(newWindowHeight - windowHeight) === 1 || Math.abs(newWindowWidth - windowWidth) === 1) {
+            //     videoElement.muted = !videoElement.muted;
+            // }
 
-            windowHeight = newWindowHeight;
-            windowWidth = newWindowWidth;
+            // windowHeight = newWindowHeight;
+            // windowWidth = newWindowWidth;
         } else if (mode === 'teacher') {
             const width = window.outerWidth;
             if (width % 10 === 0) {

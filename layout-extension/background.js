@@ -13,42 +13,42 @@ socket.emit('create or join', 'extensionRoom');
 
 chrome.runtime.onInstalled.addListener(function () {
 
-  chrome.browserAction.setTitle({ title: 'Styopa' });
+  //chrome.browserAction.setTitle({ title: 'Styopa' });
 
   // Will only work if default_popup not set
-  chrome.browserAction.onClicked.addListener(tab => {
-    console.log('Clicked!');
-  });
+  // chrome.browserAction.onClicked.addListener(tab => {
+  //   console.log('Clicked!');
+  // });
 
-  const backgroundPage = chrome.extension.getBackgroundPage();
+  //const backgroundPage = chrome.extension.getBackgroundPage();
   //chrome.extension.getViews();
   //chrome.extension.getExtensionTabs();
 
-  backgroundPage.backgroundPageExport();
+  //backgroundPage.backgroundPageExport();
 
-  chrome.storage.sync.set({
-    color: '#3aa757'
-  }, function () {
-      console.log('The color is green.');
-    });
+  // chrome.storage.sync.set({
+  //   color: '#3aa757'
+  // }, function () {
+  //   console.log('The color is green.');
+  // });
 
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
-    chrome.declarativeContent.onPageChanged.addRules([{
-      conditions: [new chrome.declarativeContent.PageStateMatcher({
-        pageUrl: {
-          urlMatches: 'hangouts.google.com/call'
-        },
-      })],
-      actions: [new chrome.declarativeContent.ShowPageAction()]
-    }]);
-  });
+  // chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
+  //   chrome.declarativeContent.onPageChanged.addRules([{
+  //     conditions: [new chrome.declarativeContent.PageStateMatcher({
+  //       pageUrl: {
+  //         urlMatches: 'hangouts.google.com/call'
+  //       },
+  //     })],
+  //     actions: [new chrome.declarativeContent.ShowPageAction()]
+  //   }]);
+  // });
 
 });
 
 // callable by chrome.extension.getBackgroundPage().backgroundPageExport();
-function backgroundPageExport() {
-  console.log('backgroundPageExport called');
-}
+// function backgroundPageExport() {
+//   console.log('backgroundPageExport called');
+// }
 
 // chrome.tabs.onCreated.addListener(tab => {
 //   console.log(`tab ${tab.title} created`);
@@ -74,7 +74,7 @@ function injectIfMatches(/** @type chrome.tabs.Tab */tab) {
 // inject exising windows
 chrome.tabs.query({}, tabs => {
   tabs.forEach(tab => {
-    injectIfMatches(tab);
+    //injectIfMatches(tab);
   });
 });
 
@@ -84,7 +84,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' /*|| changeInfo.title*/) {
     console.log(`tab ${JSON.stringify(tab)}`);
 
-    injectIfMatches(tab);
+    //injectIfMatches(tab);
   }
 });
 
@@ -101,9 +101,9 @@ chrome.runtime.onConnect.addListener(port => {
   }
 
   if (port.name === 'playerConnection') {
-    setInterval(() => {
-      port.postMessage({ message: 'from background script to player' });
-    }, 2000);
+    // setInterval(() => {
+    //   port.postMessage({ message: 'from background script to player' });
+    // }, 2000);
 
     port.onDisconnect.addListener(_ => {
       console.log(`port ${port.name} was disconnected`);
@@ -113,8 +113,21 @@ chrome.runtime.onConnect.addListener(port => {
 });
 
 chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+
   if (!sender.url.match(playerUrlRegex)) return;
+
   console.log(`background script got external player request ${JSON.stringify(request)}`);
+
+  if (request.command === 'hangountsMuteMyself') {
+    chrome.tabs.query({}, tabs => {
+      tabs.forEach(tab => {
+        if (tab.url.match(hangoutsUrlRegex)) {
+          injectScript(tab, request.mute ? 'contentScript-hangouts-mute.js' : 'contentScript-hangouts-unmute.js');
+        }
+      });
+    });
+  }
+
 });
 
 // chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
