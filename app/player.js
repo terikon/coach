@@ -95,17 +95,17 @@ window.addEventListener('load', () => {
                     switch (layout) {
                         case 'group':
                             videoElement.muted = false;
-                            hangountsMuteMyself(true);
+                            hangountsMuteMyself(true, 'Student ?');
                             break;
-                        case 'student 1':
-                        case 'student 2':
-                        case 'student 3':
+                        case 'Student 1':
+                        case 'Student 2':
+                        case 'Student 3':
                             videoElement.muted = true;
                             hangountsMuteMyself(false, layout);
                             break;
                         default:
                             videoElement.muted = false;
-                            hangountsMuteMyself(true);
+                            hangountsMuteMyself(true, 'Student ?');
                             break;
                     }
                 }
@@ -258,19 +258,19 @@ window.addEventListener('load', () => {
 
             const switchLayout = layout => {
                 sendData({ command: 'layout', layout: layout });
-                hangountsMuteMyself(true); // mute all
+                hangountsMuteMyself(true, 'Student ?'); // mute all
                 hangountsMuteMyself(false, layout); // unmute active student
             };
 
             if (width % 10 === 0) {
                 sendData({ command: 'layout', layout: 'group' });
-                hangountsMuteMyself(false);
+                hangountsMuteMyself(false, 'Student ?');
             } else if (width % 10 === 1) {
-                switchLayout('student 1');
+                switchLayout('Student 1');
             } else if (width % 10 === 2) {
-                switchLayout('student 2');
+                switchLayout('Student 2');
             } else if (width % 10 === 3) {
-                switchLayout('student 3');
+                switchLayout('Student 3');
             }
         }
     });
