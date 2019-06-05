@@ -255,14 +255,22 @@ window.addEventListener('load', () => {
             // windowWidth = newWindowWidth;
         } else if (mode === 'teacher') {
             const width = window.outerWidth;
+
+            const switchLayout = layout => {
+                sendData({ command: 'layout', layout: layout });
+                hangountsMuteMyself(true); // mute all
+                hangountsMuteMyself(false, layout); // unmute active student
+            };
+
             if (width % 10 === 0) {
                 sendData({ command: 'layout', layout: 'group' });
+                hangountsMuteMyself(false);
             } else if (width % 10 === 1) {
-                sendData({ command: 'layout', layout: 'student 1' });
+                switchLayout('student 1');
             } else if (width % 10 === 2) {
-                sendData({ command: 'layout', layout: 'student 2' });
+                switchLayout('student 2');
             } else if (width % 10 === 3) {
-                sendData({ command: 'layout', layout: 'student 3' });
+                switchLayout('student 3');
             }
         }
     });
