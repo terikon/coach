@@ -98,8 +98,10 @@ window.addEventListener('load', () => {
                             hangountsMuteMyself(true);
                             break;
                         case 'student 1':
+                        case 'student 2':
+                        case 'student 3':
                             videoElement.muted = true;
-                            hangountsMuteMyself(false);
+                            hangountsMuteMyself(false, layout);
                             break;
                         default:
                             videoElement.muted = false;
@@ -111,8 +113,8 @@ window.addEventListener('load', () => {
         }        
     }
 
-    function hangountsMuteMyself(mute) {
-        sendData({ command: 'hangountsMuteMyself', mute: mute }, true);
+    function hangountsMuteMyself(mute, titleRegex) {
+        sendData({ command: 'hangountsMuteMyself', mute: mute, titleRegex: titleRegex }, true);
     }
 
     function sendData(data, local) {
