@@ -120,8 +120,10 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
 
   if (request.command === 'hangountsMuteMyself') {
     chrome.tabs.query({}, tabs => {
+      console.log(`background script handled external player request ${JSON.stringify(request)}`);
       tabs.forEach(tab => {
-        if (tab.url.match(hangoutsUrlRegex) && (!request.titleRegex || tab.title.match(request.titleRegex)) ) {
+        if (tab.url.match(hangoutsUrlRegex) && (!request.titleRegex || tab.title.match(request.titleRegex))) {
+          injectScript(tab, 'contentScript-hangouts-loop.js');
           injectScript(tab, request.mute ? 'contentScript-hangouts-mute.js' : 'contentScript-hangouts-unmute.js');
         }
       });

@@ -95,17 +95,17 @@ window.addEventListener('load', () => {
                     switch (layout) {
                         case 'group':
                             videoElement.muted = false;
-                            hangountsMuteMyself(true, 'Student ?');
+                            hangountsMuteMyself(true, 'Student.*');
                             break;
-                        case 'Student 1':
-                        case 'Student 2':
-                        case 'Student 3':
+                        case 'Student - 1':
+                        case 'Student - 2':
+                        case 'Student - 3':
                             videoElement.muted = true;
                             hangountsMuteMyself(false, layout);
                             break;
                         default:
                             videoElement.muted = false;
-                            hangountsMuteMyself(true, 'Student ?');
+                            hangountsMuteMyself(true, 'Student.*');
                             break;
                     }
                 }
@@ -237,6 +237,23 @@ window.addEventListener('load', () => {
         socket.emit('bye', room);
     });
 
+    const switchLayoutToStudent = layout => {
+        sendData({ command: 'layout', layout: layout });
+        hangountsMuteMyself(true, 'Student.*'); // mute all
+        hangountsMuteMyself(false, layout); // unmute active student
+    };
+
+    const switchLayout = layout => {
+        if (layout === 'group') {
+            sendData({ command: 'layout', layout: 'group' });
+            hangountsMuteMyself(false, 'Student.*');
+        } else {
+            switchLayoutToStudent(layout);    
+        }
+    }
+
+    window.switchLayout = switchLayout; // for debugging
+
     let windowHeight = window.innerHeight;
     let windowWidth = window.innerWidth;
 
@@ -255,23 +272,18 @@ window.addEventListener('load', () => {
             // windowWidth = newWindowWidth;
         } else if (mode === 'teacher') {
             const width = window.outerWidth;
-
-            const switchLayout = layout => {
-                sendData({ command: 'layout', layout: layout });
-                hangountsMuteMyself(true, 'Student ?'); // mute all
-                hangountsMuteMyself(false, layout); // unmute active student
-            };
-
+            
             if (width % 10 === 0) {
-                sendData({ command: 'layout', layout: 'group' });
-                hangountsMuteMyself(false, 'Student ?');
+                switchLayout('group');
             } else if (width % 10 === 1) {
-                switchLayout('Student 1');
+                switchLayout('Student - 1');
             } else if (width % 10 === 2) {
-                switchLayout('Student 2');
+                switchLayout('Student - 2');
             } else if (width % 10 === 3) {
-                switchLayout('Student 3');
+                switchLayout('Student - 3');
             }
+
+            
         }
     });
 
