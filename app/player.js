@@ -96,12 +96,14 @@ window.addEventListener('load', () => {
                         case 'group':
                             videoElement.muted = false;
                             hangountsMuteMyself(true, 'Student.*');
+                            switchScreenLayout(mode, layout, 'full video');
                             break;
                         case 'Student - 1':
                         case 'Student - 2':
                         case 'Student - 3':
                             videoElement.muted = true;
                             hangountsMuteMyself(false, layout);
+                            switchScreenLayout(mode, layout, 'full teacher');
                             break;
                         default:
                             videoElement.muted = false;
@@ -115,6 +117,10 @@ window.addEventListener('load', () => {
 
     function hangountsMuteMyself(mute, titleRegex) {
         sendData({ command: 'hangountsMuteMyself', mute: mute, titleRegex: titleRegex }, true);
+    }
+
+    function switchScreenLayout(mode, layout, screenLayout) {
+        sendData({ command: 'switchScreenLayout', mode: mode, layout: layout, screenLayout: screenLayout }, true);
     }
 
     function sendData(data, local) {

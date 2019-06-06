@@ -1,0 +1,16 @@
+{
+    "screenLayouts" : [
+        {
+          "mode": "student",
+          "titleRegex": "Player"
+        },
+        {
+          "mode": "student",
+          "titleRegex": "Self camera"
+        },
+        {
+          "mode": "student",
+          "titleRegex": "{layout}"
+        }
+    ]
+}

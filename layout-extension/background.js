@@ -112,25 +112,52 @@ chrome.runtime.onConnect.addListener(port => {
 
 });
 
-chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessageExternal.addListener(async (request, sender, sendResponse) => {
 
   if (!sender.url.match(playerUrlRegex)) return;
 
   console.log(`background script got external player request ${JSON.stringify(request)}`);
 
-  if (request.command === 'hangountsMuteMyself') {
-    chrome.tabs.query({}, tabs => {
-      console.log(`background script handled external player request ${JSON.stringify(request)}`);
-      tabs.forEach(tab => {
-        if (tab.url.match(hangoutsUrlRegex) && (!request.titleRegex || tab.title.match(request.titleRegex))) {
-          injectScript(tab, 'contentScript-hangouts-loop.js');
-          injectScript(tab, request.mute ? 'contentScript-hangouts-mute.js' : 'contentScript-hangouts-unmute.js');
-        }
+  switch (request.command) {
+    case 'hangountsMuteMyself':
+      chrome.tabs.query({}, tabs => {
+        console.log(`background script handled external player request ${JSON.stringify(request)}`);
+        tabs.forEach(tab => {
+          if (tab.url.match(hangoutsUrlRegex) && (!request.titleRegex || tab.title.match(request.titleRegex))) {
+            injectScript(tab, 'contentScript-hangouts-loop.js');
+            injectScript(tab, request.mute ? 'contentScript-hangouts-mute.js' : 'contentScript-hangouts-unmute.js');
+          }
+        });
       });
-    });
+      break;
+    case 'switchScreenLayout':
+      const mode = await getMode();
+      if (mode === request.mode) {
+        const screenLayouts = (await loadScreenLayouts()).screenLayouts;
+
+        screenLayouts.forEach(screenLayout => {
+
+        });
+
+        break;
+      }
   }
 
 });
+
+function getMode() {
+  return new Promise(resolve => {-+5
+    chrome.storage.sync.get('mode', data => {
+      const mode = data.mode || 'student';
+      resolve(mode);
+    });
+  });
+}
+
+async function loadScreenLayouts() {
+  const response = await fetch('screenlayouts.json');
+  return response.json();
+}
 
 // chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
 //   console.log(`tab ${tabId} removed: ${JSON.stringify(removeInfo)}`);
