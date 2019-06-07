@@ -323,6 +323,8 @@ window.addEventListener('load', () => {
     }
 
     function createPeerConnection(isInitiator, config) {
+        if (!useRTC) return;
+
         console.log('Creating Peer connection as initiator?', isInitiator, 'config:', config);
         peerConn = new RTCPeerConnection(config);
 
