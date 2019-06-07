@@ -1,5 +1,7 @@
 'use strict';
 
+const extensionID = 'mcmahbehnlmfonjbpcoblpbbnlohcinp';
+
 const useRTC = false;
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -99,10 +101,14 @@ window.addEventListener('load', () => {
                             switchScreenLayout(mode, layout, 'full video');
                             break;
                         case 'Student - 1':
+                            videoElement.muted = true;
+                            hangountsMuteMyself(false, 'Student.*');
+                            switchScreenLayout(mode, layout, 'full teacher');
+                            break;
                         case 'Student - 2':
                         case 'Student - 3':
-                            videoElement.muted = true;
-                            hangountsMuteMyself(false, layout);
+                            videoElement.muted = false;
+                            hangountsMuteMyself(true, 'Student.*');
                             switchScreenLayout(mode, layout, 'full teacher');
                             break;
                         default:
@@ -130,7 +136,7 @@ window.addEventListener('load', () => {
         if (!useRTC) {
             socket.emit('player', serialized);
             if (chrome && local) {
-                chrome.runtime.sendMessage('mcmahbehnlmfonjbpcoblpbbnlohcinp', data, response => {
+                chrome.runtime.sendMessage(extensionID, data, response => {
                     if (!response.success) {
                         console.log(`Could not connect to extension`);
                     }
@@ -226,7 +232,7 @@ window.addEventListener('load', () => {
         //snapAndSendBtn.disabled = true;
         // If peer did not create the room, re-enter to be creator.
         if (!isInitiator) {
-            window.location.reload();
+            //window.location.reload();
         }
     });
 
@@ -240,7 +246,7 @@ window.addEventListener('load', () => {
 
     window.addEventListener('unload', function () {
         console.log(`Unloading window. Notifying peers in ${room}.`);
-        socket.emit('bye', room);
+        //socket.emit('bye', room);
     });
 
     const switchLayoutToStudent = layout => {
