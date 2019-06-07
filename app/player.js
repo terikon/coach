@@ -1,14 +1,15 @@
 'use strict';
 
-const extensionID = 'mcmahbehnlmfonjbpcoblpbbnlohcinp';
-
 const useRTC = false;
 
 const urlParams = new URLSearchParams(window.location.search);
+
 const mode = urlParams.get('mode'); // student or teacher
 if (mode !== 'student' && mode !== 'teacher') {
     console.log(`INVALID MODE ${mode}`);
 }
+
+const extensionID = urlParams.get('extensionID');
 
 window.addEventListener('load', () => {
 
