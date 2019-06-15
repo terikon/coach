@@ -33,5 +33,8 @@ selectTitle.addEventListener('change', function () {
       tabs[0].id, {
         code: `document.title = '${title}';`
       });
-  });
+    });
+
+  chrome.storage.sync.set({ layout: title });
+
 });

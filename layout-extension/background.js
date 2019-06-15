@@ -141,6 +141,10 @@ chrome.runtime.onMessageExternal.addListener(async (request, sender, sendRespons
 
         break;
       }
+    case 'whoAmI':
+      chrome.storage.sync.get('layout', layout => {
+        sendResponse(layout);
+      });
   }
 
 });

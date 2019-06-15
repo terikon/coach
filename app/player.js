@@ -104,15 +104,21 @@ window.addEventListener('load', () => {
                             switchScreenLayout(mode, layout, 'full video');
                             break;
                         case 'Student - 1':
-                            videoElement.muted = true;
-                            hangountsMuteMyself(false, 'Student.*');
-                            switchScreenLayout(mode, layout, 'full teacher');
-                            break;
                         case 'Student - 2':
                         case 'Student - 3':
-                            videoElement.muted = false;
-                            hangountsMuteMyself(true, 'Student.*');
-                            switchScreenLayout(mode, layout, 'full teacher');
+                            // who am I? - ask layout extension
+                            whoAmI().then(response => {
+                                const me = response.layout;
+                                console.log(`Me is ${me}`);
+                                if (layout === me) {
+                                    videoElement.muted = true;
+                                    hangountsMuteMyself(false, layout);
+                                } else {
+                                    videoElement.muted = false;
+                                    hangountsMuteMyself(true, 'Student.*');
+                                }
+                                switchScreenLayout(mode, layout, 'full teacher');
+                            });
                             break;
                         default:
                             videoElement.muted = false;
@@ -128,35 +134,44 @@ window.addEventListener('load', () => {
         sendData({ command: 'hangountsMuteMyself', mute: mute, titleRegex: titleRegex }, true);
     }
 
+    function whoAmI() {
+        return sendData({ command: 'whoAmI' }, true);
+    }
+
     function switchScreenLayout(mode, layout, screenLayout) {
         sendData({ command: 'switchScreenLayout', mode: mode, layout: layout, screenLayout: screenLayout }, true);
     }
 
     function sendData(data, local) {
-        let serialized = JSON.stringify(data);
-        console.log(`Sending data ${local ? 'locally' : 'remotely'} ${serialized}`);
+        return new Promise(resolve => {
 
-        if (!useRTC) {
-            if (!local) socket.emit('player', serialized);
-            if (chrome && local) {
-                chrome.runtime.sendMessage(extensionID, data, response => {
-                    if (!response.success) {
-                        console.log(`Could not connect to extension`);
-                    }
-                });
+            let serialized = JSON.stringify(data);
+            console.log(`Sending data ${local ? 'locally' : 'remotely'} ${serialized}`);
+
+            if (!useRTC) {
+                if (!local) socket.emit('player', serialized);
+                if (chrome && local) {
+                    chrome.runtime.sendMessage(extensionID, data, response => {
+                        if (!response.success) {
+                            console.log(`Could not connect to extension`);
+                        }
+                        resolve(response);
+                    });
+                }
+                return;
             }
-            return;
-        }
 
-        if (!dataChannel) {
-            trace('Connection has not been initiated. ' + 'Get two peers in the same room first');
-            return;
-        } else if (dataChannel.readyState === 'closed') {
-            trace('Connection was lost. Peer closed the connection.');
-            return;
-        }
+            if (!dataChannel) {
+                trace('Connection has not been initiated. ' + 'Get two peers in the same room first');
+                return;
+            } else if (dataChannel.readyState === 'closed') {
+                trace('Connection was lost. Peer closed the connection.');
+                return;
+            }
 
-        dataChannel.send(serialized);
+            dataChannel.send(serialized);
+            
+        });
     }
 
 
