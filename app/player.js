@@ -68,7 +68,7 @@ window.addEventListener('load', () => {
     function onSeeked() {
         if (userInitiated) {
             console.log(`seeked to ${videoElement.currentTime}`);
-            sendData({ command: 'seek', currentTime: videoElement.currentTime });
+            sendData({ command: 'seek', currentTime: videoElement.currentTime, playerPaused: videoElement.paused });
         }
         userInitiated = true;
     }
@@ -89,6 +89,8 @@ window.addEventListener('load', () => {
                 videoElement.currentTime = data.currentTime;
                 break;
             case 'seek':
+                if (data.playerPaused && !videoElement.playerPaused) videoElement.pause();
+                if (!data.playerPaused && videoElement.playerPaused) videoElement.play();
                 videoElement.currentTime = data.currentTime;
                 break;
             case 'layout':
