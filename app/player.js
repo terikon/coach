@@ -134,7 +134,7 @@ window.addEventListener('load', () => {
 
     function sendData(data, local) {
         let serialized = JSON.stringify(data);
-        console.log(`Sending data ${serialized}`);
+        console.log(`Sending data ${local ? 'locally' : 'remotely'} ${serialized}`);
 
         if (!useRTC) {
             if (!local) socket.emit('player', serialized);
