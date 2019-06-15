@@ -137,7 +137,7 @@ window.addEventListener('load', () => {
         console.log(`Sending data ${serialized}`);
 
         if (!useRTC) {
-            socket.emit('player', serialized);
+            if (!local) socket.emit('player', serialized);
             if (chrome && local) {
                 chrome.runtime.sendMessage(extensionID, data, response => {
                     if (!response.success) {
@@ -261,7 +261,7 @@ window.addEventListener('load', () => {
     const switchLayout = layout => {
         if (layout === 'group') {
             sendData({ command: 'layout', layout: 'group' });
-            hangountsMuteMyself(false, 'Student.*');
+            hangountsMuteMyself(true, 'Student.*');
         } else {
             switchLayoutToStudent(layout);    
         }
