@@ -142,6 +142,7 @@ window.addEventListener('load', () => {
         sendData({ command: 'switchScreenLayout', mode: mode, layout: layout, screenLayout: screenLayout }, true);
     }
 
+    // will resolve to promise with response, in case request has response
     function sendData(data, local) {
         return new Promise(resolve => {
 
@@ -156,20 +157,26 @@ window.addEventListener('load', () => {
                             console.log(`Could not connect to extension`);
                         }
                         resolve(response);
+                        return;
                     });
                 }
+                resolve();
                 return;
             }
 
             if (!dataChannel) {
                 trace('Connection has not been initiated. ' + 'Get two peers in the same room first');
+                resolve();
                 return;
             } else if (dataChannel.readyState === 'closed') {
                 trace('Connection was lost. Peer closed the connection.');
+                resolve();
                 return;
             }
 
             dataChannel.send(serialized);
+
+            resolve();
             
         });
     }
