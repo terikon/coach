@@ -4,23 +4,17 @@
           "mode": "student",
           "layout": "video",
           "titleRegex": "Player",
-          "top": 4,
-          "left": 10
+          "top": 10,
+          "left": 200,
+          "width": 500,
+          "height": 300
         },
         {
           "mode": "student",
           "layout": "teacher",
           "titleRegex": "Player",
-          "top": 4
-        },
-        {
-          "mode": "student",
-          "layout": "",
-          "titleRegex": "Self camera"
-        },
-        {
-          "mode": "student",
-          "titleRegex": "{layout}"
+          "top": 4,
+          "left": 10
         }
     ]
 }

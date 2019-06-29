@@ -137,11 +137,26 @@ chrome.runtime.onMessageExternal.addListener(async (request, sender, sendRespons
 
         console.log(`switchScreenLayout: mode ${request.mode}, layout: ${request.layout}`);
 
-        screenLayouts = screenLayouts.filter(l => l.mode === request.mode && l.layout === request.layout);
+        screenLayouts = screenLayouts.filter(l => l.mode === request.mode && (!request.layout || l.layout === request.layout));
 
         console.log(`screenLayouts: ${JSON.stringify(screenLayouts)}`);
 
         screenLayouts.forEach(screenLayout => {
+
+          chrome.tabs.query({title: screenLayout.titleRegex}, tabs => {
+            console.log(`tabs of ${screenLayout.titleRegex}: ${JSON.stringify(tabs)}`);
+
+            tabs.forEach(t => {
+              const windowId = t.windowId;
+              chrome.windows.update(windowId, {
+                left: screenLayout.left,
+                top: screenLayout.top,
+                width: screenLayout.width,
+                height: screenLayout.height,
+              });
+            });
+
+          });
 
         });
 
