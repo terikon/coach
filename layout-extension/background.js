@@ -133,7 +133,13 @@ chrome.runtime.onMessageExternal.addListener(async (request, sender, sendRespons
     case 'switchScreenLayout':
       const mode = await getMode();
       if (mode === request.mode) {
-        const screenLayouts = (await loadScreenLayouts()).screenLayouts;
+        /** @type Array */let screenLayouts = (await loadScreenLayouts()).screenLayouts;
+
+        console.log(`switchScreenLayout: mode ${request.mode}, layout: ${request.layout}`);
+
+        screenLayouts = screenLayouts.filter(l => l.mode === request.mode && l.layout === request.layout);
+
+        console.log(`screenLayouts: ${JSON.stringify(screenLayouts)}`);
 
         screenLayouts.forEach(screenLayout => {
 

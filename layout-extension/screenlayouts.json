@@ -2,10 +2,20 @@
     "screenLayouts" : [
         {
           "mode": "student",
-          "titleRegex": "Player"
+          "layout": "video",
+          "titleRegex": "Player",
+          "top": 4,
+          "left": 10
         },
         {
           "mode": "student",
+          "layout": "teacher",
+          "titleRegex": "Player",
+          "top": 4
+        },
+        {
+          "mode": "student",
+          "layout": "",
           "titleRegex": "Self camera"
         },
         {

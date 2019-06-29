@@ -75,7 +75,7 @@ window.addEventListener('load', () => {
 
     function onData(event) {
         console.log(`Received data: ${event.data}`);
-        var data = JSON.parse(event.data);
+        var data = typeof(event.data) === 'string' ? JSON.parse(event.data) : event.data;
 
         userInitiated = false;
 
@@ -101,7 +101,7 @@ window.addEventListener('load', () => {
                         case 'group':
                             videoElement.muted = false;
                             hangountsMuteMyself(true, 'Student.*');
-                            switchScreenLayout(mode, layout, 'full video');
+                            switchScreenLayout(mode, 'video');
                             break;
                         case 'Student - 1':
                         case 'Student - 2':
@@ -113,11 +113,12 @@ window.addEventListener('load', () => {
                                 if (layout === me) {
                                     videoElement.muted = true;
                                     hangountsMuteMyself(false, layout);
+                                    switchScreenLayout(mode, 'teacher');
                                 } else {
                                     videoElement.muted = false;
                                     hangountsMuteMyself(true, 'Student.*');
+                                    switchScreenLayout(mode, 'video');
                                 }
-                                switchScreenLayout(mode, layout, 'full teacher');
                             });
                             break;
                         default:
@@ -130,6 +131,8 @@ window.addEventListener('load', () => {
         }        
     }
 
+    window.onData = onData; // for debugging
+
     function hangountsMuteMyself(mute, titleRegex) {
         sendData({ command: 'hangountsMuteMyself', mute: mute, titleRegex: titleRegex }, true);
     }
@@ -138,8 +141,8 @@ window.addEventListener('load', () => {
         return sendData({ command: 'whoAmI' }, true);
     }
 
-    function switchScreenLayout(mode, layout, screenLayout) {
-        sendData({ command: 'switchScreenLayout', mode: mode, layout: layout, screenLayout: screenLayout }, true);
+    function switchScreenLayout(mode, layout) {
+        sendData({ command: 'switchScreenLayout', mode: mode, layout: layout }, true);
     }
 
     // will resolve to promise with response, in case request has response
@@ -153,14 +156,15 @@ window.addEventListener('load', () => {
                 if (!local) socket.emit('player', serialized);
                 if (chrome && local) {
                     chrome.runtime.sendMessage(extensionID, data, response => {
-                        if (!response.success) {
+                        if (chrome.runtime.lastError) {
                             console.log(`Could not connect to extension`);
                         }
                         resolve(response);
                         return;
                     });
+                } else {
+                    resolve();
                 }
-                resolve();
                 return;
             }
 
