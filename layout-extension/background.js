@@ -148,11 +148,15 @@ chrome.runtime.onMessageExternal.addListener(async (request, sender, sendRespons
 
             tabs.forEach(t => {
               const windowId = t.windowId;
+              // chrome.windows.get(windowId, window => {
+              //   console.log(JSON.stringify(window));
+              // });
               chrome.windows.update(windowId, {
                 left: screenLayout.left,
                 top: screenLayout.top,
                 width: screenLayout.width,
                 height: screenLayout.height,
+                focused: screenLayout.alwaysOnTop || false,
               });
             });
 

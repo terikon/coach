@@ -1,20 +1,63 @@
 {
-    "screenLayouts" : [
-        {
-          "mode": "student",
-          "layout": "video",
-          "titleRegex": "Player",
-          "top": 10,
-          "left": 200,
-          "width": 500,
-          "height": 300
-        },
-        {
-          "mode": "student",
-          "layout": "teacher",
-          "titleRegex": "Player",
-          "top": 4,
-          "left": 10
-        }
-    ]
+  "screenLayouts": [{
+      "mode": "student",
+      "layout": "video",
+      "titleRegex": "Student*",
+      "left": -1925,
+      "top": 780,
+      "width": 533,
+      "height": 303,
+      "alwaysOnTop": true
+    },
+    {
+      "mode": "student",
+      "layout": "video",
+      "titleRegex": "Self camera",
+      "left": -289,
+      "top": 0,
+      "width": 292,
+      "height": 191,
+      "alwaysOnTop": true
+    },
+    {
+      "mode": "student",
+      "layout": "video",
+      "titleRegex": "Player",
+      "left": -1925,
+      "top": 0,
+      "width": 1933,
+      "height": 1086
+    },
+
+    {
+      "mode": "student",
+      "layout": "teacher",
+      "titleRegex": "Student*",
+      "left": -1925,
+      "top": 242,
+      "width": 1647,
+      "height": 861,
+      "alwaysOnTop": true
+    },
+    {
+      "mode": "student",
+      "layout": "teacher",
+      "titleRegex": "Self camera",
+      "left": -289,
+      "top": 0,
+      "width": 292,
+      "height": 191,
+      "alwaysOnTop": true
+    },
+    {
+      "mode": "student",
+      "layout": "teacher",
+      "titleRegex": "Player",
+      "left": -1925,
+      "top": 0,
+      "width": 1933,
+      "height": 1085
+    }
+
+  ]
 }
