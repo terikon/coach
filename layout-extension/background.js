@@ -190,12 +190,14 @@ chrome.runtime.onMessageExternal.addListener(async (request, sender, sendRespons
 chrome.windows.onFocusChanged.addListener(focusedWindowId => {
   if (!onBottomWindowIds[focusedWindowId]) return;
   // focused window should be on bottom
-  for (let windowIdstr in onTopWindowIds) {
-    const windowId = Number(windowIdstr);
-    chrome.windows.update(windowId, {
-      focused: true,
-    });
-  }
+  setTimeout(() => { // delay to make other window somehow usable
+    for (let windowIdstr in onTopWindowIds) {
+      const windowId = Number(windowIdstr);
+      chrome.windows.update(windowId, {
+        focused: true,
+      });
+    }
+  }, 500);
 });
 
 function getMode() {
