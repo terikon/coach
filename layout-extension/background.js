@@ -112,6 +112,9 @@ chrome.runtime.onConnect.addListener(port => {
 
 });
 
+var onTopWindowIds = {};
+var onBottomWindowIds = {};
+
 chrome.runtime.onMessageExternal.addListener(async (request, sender, sendResponse) => {
 
   if (!sender.url.match(playerUrlRegex)) return;
@@ -151,13 +154,22 @@ chrome.runtime.onMessageExternal.addListener(async (request, sender, sendRespons
               // chrome.windows.get(windowId, window => {
               //   console.log(JSON.stringify(window));
               // });
+              const alwaysOnTop = screenLayout.alwaysOnTop || false;
               chrome.windows.update(windowId, {
                 left: screenLayout.left,
                 top: screenLayout.top,
                 width: screenLayout.width,
                 height: screenLayout.height,
-                focused: screenLayout.alwaysOnTop || false,
+                focused: alwaysOnTop,
               });
+
+              if (alwaysOnTop) {
+                onTopWindowIds[windowId] = true;
+                delete onBottomWindowIds[windowId];
+              } else {
+                onBottomWindowIds[windowId] = true;
+                delete onTopWindowIds[windowId];
+              }
             });
 
           });
@@ -172,6 +184,18 @@ chrome.runtime.onMessageExternal.addListener(async (request, sender, sendRespons
       });
   }
 
+});
+
+// implementation of alwaysOnTop
+chrome.windows.onFocusChanged.addListener(focusedWindowId => {
+  if (!onBottomWindowIds[focusedWindowId]) return;
+  // focused window should be on bottom
+  for (let windowIdstr in onTopWindowIds) {
+    const windowId = Number(windowIdstr);
+    chrome.windows.update(windowId, {
+      focused: true,
+    });
+  }
 });
 
 function getMode() {
