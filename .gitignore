@@ -11,6 +11,5 @@ package-lock.json
 # Optional npm cache directory
 .npm
 
-# vide files
-*.mov
-*.mp4
+# video files
+/videos/
