@@ -47,14 +47,16 @@ window.addEventListener('load', async () => {
     });
 
     let workout = await loadWorkout(workoutName);
+    let workoutIndex = -1;
 
     buttonNext.addEventListener('click', () => {
-        nextWorkout();
+        workoutIndex = nextWorkout(workout, workoutIndex);
     });
 
     videoElement.addEventListener('play', onPlay);
     videoElement.addEventListener('pause', onPause);
     videoElement.addEventListener('seeked', onSeeked);
+    videoElement.addEventListener('timeupdate', onTimeUpdate);
 
     let userInitiated = true;
 
@@ -75,6 +77,7 @@ window.addEventListener('load', async () => {
     }
 
     function onSeeked() {
+        workoutIndex = getWorkoutIndex(workout, videoElement.currentTime);
         if (userInitiated) {
             console.log(`seeked to ${videoElement.currentTime}`);
             sendData({ command: 'seek', currentTime: videoElement.currentTime, playerPaused: videoElement.paused });
@@ -458,8 +461,29 @@ window.addEventListener('load', async () => {
         return workout;
     }
 
-    function nextWorkout() {
+    function nextWorkout(workout, workoutIndex) {
+        const currentTime = videoElement.currentTime;
+        let nextTime;
+        if (!workout.timing[workoutIndex + 1]) {
+            nextTime = workout.timing[workoutIndex].end;
+        } else {
+            workoutIndex += 1;
+            nextTime = workout.timing[workoutIndex].start;
+        }
+        videoElement.currentTime = nextTime;
+        return workoutIndex;
+    }
 
+    function getWorkoutIndex(workout, time) {
+        return workout.timing.findIndex(t => t.start <= time && t.end >= time);
+    }
+
+    function onTimeUpdate() {
+        const currentTime = videoElement.currentTime;
+        const currentWorkout = workout.timing[workoutIndex];
+        if (currentTime > currentWorkout.end) {
+            videoElement.currentTime = currentWorkout.cycle;
+        }
     }
 
     /*
