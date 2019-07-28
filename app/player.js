@@ -10,8 +10,9 @@ if (mode !== 'student' && mode !== 'teacher') {
 }
 
 const extensionID = urlParams.get('extensionID');
+var workoutName = urlParams.get('workout');
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
 
     /** @type HTMLVideoElement */
     const videoElement = document.querySelector('.video');
@@ -42,6 +43,8 @@ window.addEventListener('load', () => {
 
         videoElement.src = URL.createObjectURL(file);
     });
+
+    let workout = await loadWorkout(workoutName);
 
     videoElement.addEventListener('play', onPlay);
     videoElement.addEventListener('pause', onPause);
@@ -426,6 +429,19 @@ window.addEventListener('load', () => {
         // setTimeout(() => {
         //     infoboxElement.classList.add('on');    
         // }, 0);
+    }
+
+    async function loadWorkout(workoutName) {
+        if (!workoutName) return;
+
+        const jsonName = `workouts/${workoutName}.json`;
+
+        const response = await fetch(jsonName);
+        const workout = await response.json();
+        
+        videoElement.src = `workouts/${workout.fileName}`;
+
+        return workout;
     }
 
     /*
