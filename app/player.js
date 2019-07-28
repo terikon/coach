@@ -18,6 +18,8 @@ window.addEventListener('load', async () => {
     const videoElement = document.querySelector('.video');
     /** @type HTMLDivElement */
     const infoboxElement = document.querySelector('#infobox');
+    /** @type HTMLButtonElement */
+    const buttonNext = document.querySelector('#buttonNext');
 
     if (mode === 'teacher') {
         videoElement.muted = true;
@@ -45,6 +47,10 @@ window.addEventListener('load', async () => {
     });
 
     let workout = await loadWorkout(workoutName);
+
+    buttonNext.addEventListener('click', () => {
+        nextWorkout();
+    });
 
     videoElement.addEventListener('play', onPlay);
     videoElement.addEventListener('pause', onPause);
@@ -441,7 +447,19 @@ window.addEventListener('load', async () => {
         
         videoElement.src = `workouts/${workout.fileName}`;
 
+        workout.timing = workout.timing.map(x => (
+            {
+                start: moment.duration(x.start).asSeconds(),
+                end: moment.duration(x.end).asSeconds(),
+                cycle: moment.duration(x.cycle).asSeconds()
+            }
+        )).sort((a, b) => a.end - b.end);
+
         return workout;
+    }
+
+    function nextWorkout() {
+
     }
 
     /*

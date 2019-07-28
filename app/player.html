@@ -73,6 +73,13 @@
         }
 */
 
+        .controls {
+            z-index: 10;
+            position: absolute;
+            bottom: 50;
+            right: 230;
+        }
+
     </style>
 </head>
 
@@ -80,12 +87,16 @@
     <video class="video" controls>
         <p>Browser doesn't support HTML5 video</p>
     </video>
+    <div class="controls">
+        <button id="buttonNext">next</button>
+    </div>
     <div id="infobox" class="infobox">
     </div>
 </body>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="node_modules/moment/min/moment.min.js"></script>
 <script src="player.js"></script>
 
 </html>
