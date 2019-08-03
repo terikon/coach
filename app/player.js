@@ -22,6 +22,8 @@ window.addEventListener('load', async () => {
     const infoboxElement = document.querySelector('#infobox');
     /** @type HTMLButtonElement */
     const buttonNext = document.querySelector('#buttonNext');
+    /** @type HTMLInputElement */
+    const checkboxCycle = document.querySelector('#checkboxCycle');
 
     if (mode === 'teacher') {
         videoElement.muted = true;
@@ -100,6 +102,8 @@ window.addEventListener('load', async () => {
         userInitiated = false;
 
         switch (data.command) {
+            case 'settings':
+                setSettings(data.settings);
             case 'play':
                 videoElement.currentTime = data.currentTime;
                 videoElement.play();
@@ -490,11 +494,13 @@ window.addEventListener('load', async () => {
         return workout.timing.findIndex(t => t.start <= time && t.end >= time);
     }
 
-    var shouldCycle = true;
+    var settings = {
+        shouldCycle: true
+    };
     var seeking = true;
     function onTimeUpdate() {
         if (seeking || !userInitiated) return;
-        if (shouldCycle) {
+        if (settings.shouldCycle) {
             if (workoutIndex >= 0) {
                 const currentTime = videoElement.currentTime;
                 const currentWorkout = workout.timing[workoutIndex];
@@ -506,6 +512,22 @@ window.addEventListener('load', async () => {
         } else {
             workoutIndex = getWorkoutIndex(workout, videoElement.currentTime);
         }
+    }
+    
+    setSettings(settings);
+    checkboxCycle.addEventListener('change', function() {
+        settings.shouldCycle = this.checked;
+        updateSettings(settings);
+    });
+
+    function setSettings(newSettings) {
+        settings = newSettings;
+        checkboxCycle.checked = newSettings.shouldCycle;
+    }
+
+    function updateSettings(newSettings) {
+        setSettings(newSettings);
+        sendData({ command: 'settings', settings: newSettings });
     }
 
     /*
