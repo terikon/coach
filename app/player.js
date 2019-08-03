@@ -1,6 +1,6 @@
 'use strict';
 
-const skipSwitchLayout = true;
+const skipSwitchLayout = false;
 
 const useRTC = false;
 
