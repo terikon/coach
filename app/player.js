@@ -1,6 +1,6 @@
 'use strict';
 
-const skipSwitchLayout = false;
+const skipSwitchLayout = true;
 
 const useRTC = false;
 
@@ -24,6 +24,8 @@ window.addEventListener('load', async () => {
     const buttonNext = document.querySelector('#buttonNext');
     /** @type HTMLInputElement */
     const checkboxCycle = document.querySelector('#checkboxCycle');
+    /** @type HTMLLabelElement */
+    const labelWorkoutTimeLeft = document.querySelector('#labelWorkoutTimeLeft');
 
     if (mode === 'teacher') {
         videoElement.muted = true;
@@ -54,6 +56,7 @@ window.addEventListener('load', async () => {
     let workoutIndex = -1;
 
     buttonNext.addEventListener('click', () => {
+        workoutIndex = getWorkoutIndex(workout, videoElement.currentTime);
         workoutIndex = nextWorkout(workout, workoutIndex);
     });
 
@@ -475,9 +478,15 @@ window.addEventListener('load', async () => {
     }
 
     function nextWorkout(workout, workoutIndex) {
-        if (workoutIndex < 0) return workoutIndex;
-
         const currentTime = videoElement.currentTime;
+
+        if (workoutIndex < 0) {
+            if (workout.timing[0] && currentTime > workout.timing[0].start) {
+                // already started
+                return workoutIndex;
+            }
+        }
+        
         let nextTime;
         if (!workout.timing[workoutIndex + 1]) {
             nextTime = workout.timing[workoutIndex].end;
@@ -499,6 +508,7 @@ window.addEventListener('load', async () => {
     };
     var seeking = true;
     function onTimeUpdate() {
+        labelWorkoutTimeLeft.innerHTML = videoElement.currentTime;
         if (seeking || !userInitiated) return;
         if (settings.shouldCycle) {
             if (workoutIndex >= 0) {

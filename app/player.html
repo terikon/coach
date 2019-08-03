@@ -80,14 +80,13 @@
             right: 280;
         }
 
-        .controls #buttonNext {
-            position: relative;
-            right: 0;
-        }
-
-        .controls #checkboxCycle {
-            position: relative;
-            right: 0;
+        .workoutCycle {
+            z-index: 10;
+            position: absolute;
+            color:white;
+            font-size: x-large;
+            right: 50;
+            top: 20;
         }
 
     </style>
@@ -102,6 +101,9 @@
         <input type="checkbox" id="checkboxCycle">cycle</button>
     </div>
     <div id="infobox" class="infobox">
+    </div>
+    <div id="workoutCycle" class="workoutCycle">
+        <label id="labelWorkoutTimeLeft"></label>
     </div>
 </body>
 
