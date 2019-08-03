@@ -1,5 +1,7 @@
 'use strict';
 
+const skipSwitchLayout = false;
+
 const useRTC = false;
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -87,7 +89,7 @@ window.addEventListener('load', async () => {
             console.log(`seeked to ${videoElement.currentTime}`);
             sendData({ command: 'seek', currentTime: videoElement.currentTime, playerPaused: videoElement.paused });
         }
-        userInitiated = true;
+        userInitiated = seeking;
         seeking = false;
     }
 
@@ -160,6 +162,7 @@ window.addEventListener('load', async () => {
     }
 
     function switchScreenLayout(mode, layout) {
+        if (skipSwitchLayout) return;
         sendData({ command: 'switchScreenLayout', mode: mode, layout: layout }, true);
     }
 
@@ -468,6 +471,8 @@ window.addEventListener('load', async () => {
     }
 
     function nextWorkout(workout, workoutIndex) {
+        if (workoutIndex < 0) return workoutIndex;
+
         const currentTime = videoElement.currentTime;
         let nextTime;
         if (!workout.timing[workoutIndex + 1]) {
@@ -481,18 +486,20 @@ window.addEventListener('load', async () => {
     }
 
     function getWorkoutIndex(workout, time) {
+        time = time + 0.00001; // epsilon that in case [a,b] and [b,c], b will return second workout.
         return workout.timing.findIndex(t => t.start <= time && t.end >= time);
     }
 
     var shouldCycle = true;
     var seeking = true;
     function onTimeUpdate() {
-        if (seeking) return;
+        if (seeking || !userInitiated) return;
         if (shouldCycle) {
             if (workoutIndex >= 0) {
                 const currentTime = videoElement.currentTime;
                 const currentWorkout = workout.timing[workoutIndex];
                 if (currentTime > currentWorkout.end) {
+                    userInitiated = false;
                     videoElement.currentTime = currentWorkout.cycle;
                 }
             }
