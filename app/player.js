@@ -26,6 +26,8 @@ window.addEventListener('load', async () => {
     const checkboxCycle = document.querySelector('#checkboxCycle');
     /** @type HTMLLabelElement */
     const labelWorkoutTimeLeft = document.querySelector('#labelWorkoutTimeLeft');
+    /** @type HTMLLabelElement */
+    const labelWorkoutTimePassed = document.querySelector('#labelWorkoutTimePassed');
 
     if (mode === 'teacher') {
         videoElement.muted = true;
@@ -69,6 +71,7 @@ window.addEventListener('load', async () => {
     let userInitiated = true;
 
     function onPlay() {
+        workoutIndex = getWorkoutIndex(workout, videoElement.currentTime);
         if (userInitiated) {
             console.log('play');
             sendData({ command: 'play', currentTime: videoElement.currentTime });
@@ -498,30 +501,59 @@ window.addEventListener('load', async () => {
         return workoutIndex;
     }
 
+    // -1 if lower, workout.timing.length if greater
     function getWorkoutIndex(workout, time) {
         time = time + 0.00001; // epsilon that in case [a,b] and [b,c], b will return second workout.
-        return workout.timing.findIndex(t => t.start <= time && t.end >= time);
+        let index = workout.timing.findIndex(t => t.start <= time && t.end >= time);
+        if (index < 0) {
+            let length = workout.timing.length;
+            if (time > workout.timing[length - 1].end) return length;
+        }
+        return index;
     }
 
     var settings = {
         shouldCycle: true
     };
-    var seeking = true;
+    var seeking = false;
     function onTimeUpdate() {
-        labelWorkoutTimeLeft.innerHTML = videoElement.currentTime;
-        if (seeking || !userInitiated) return;
-        if (settings.shouldCycle) {
-            if (workoutIndex >= 0) {
-                const currentTime = videoElement.currentTime;
-                const currentWorkout = workout.timing[workoutIndex];
-                if (currentTime > currentWorkout.end) {
-                    userInitiated = false;
-                    videoElement.currentTime = currentWorkout.cycle;
+        
+        workoutIndex = getWorkoutIndex(workout, videoElement.currentTime);
+
+        if (!seeking && userInitiated) {
+            if (settings.shouldCycle) {
+                console.log(`workoutIndex: ${workoutIndex}`);
+                if (workoutIndex >= 0 && workoutIndex < workout.timing.length) {
+                    const currentTime = videoElement.currentTime;
+                    const currentWorkoutTiming = workout.timing[workoutIndex];
+                    if (currentTime > currentWorkoutTiming.end) {
+                        userInitiated = false;
+                        videoElement.currentTime = currentWorkoutTiming.cycle;
+                    }
                 }
             }
-        } else {
-            workoutIndex = getWorkoutIndex(workout, videoElement.currentTime);
         }
+
+        let timeLeft;
+        let timePassed;
+
+        if (workoutIndex >= 0 && workoutIndex < workout.timing.length) {
+            timePassed = videoElement.currentTime - workout.timing[workoutIndex].start;
+            timeLeft = workout.timing[workoutIndex].end - timePassed;
+        } else if (workoutIndex < 0) {
+            timePassed = videoElement.currentTime;
+            timeLeft = workout.timing[0].start - timePassed;
+        } else { // workoutIndex >= workout.timing.length
+            timePassed = videoElement.currentTime - workout.timing[workoutIndex - 1].end;
+            timeLeft = videoElement.duration - timePassed;
+        }
+
+        const durationLeft = moment.duration(timeLeft, 'seconds');
+        const durationPassed = moment.duration(timePassed, 'seconds');
+        
+        labelWorkoutTimeLeft.innerHTML = '-' + withPadding(durationLeft);
+        labelWorkoutTimePassed.innerHTML = withPadding(durationPassed);
+
     }
     
     setSettings(settings);
@@ -730,4 +762,16 @@ function trace(text) {
 
 function randomToken() {
     return Math.floor((1 + Math.random()) * 1e16).toString(16).substring(1);
+}
+
+function withPadding(duration) {
+    if (duration.asDays() > 1) {
+        return 'at least one day';
+    } else {
+        return [
+            ('0' + duration.hours()).slice(-2),
+            ('0' + duration.minutes()).slice(-2),
+            ('0' + duration.seconds()).slice(-2),
+        ].join(':')
+    }
 }
