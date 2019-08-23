@@ -25,9 +25,11 @@ window.addEventListener('load', async () => {
     /** @type HTMLInputElement */
     const checkboxCycle = document.querySelector('#checkboxCycle');
     /** @type HTMLLabelElement */
-    const labelWorkoutTimeLeft = document.querySelector('#labelWorkoutTimeLeft');
+    const labelExcerciseTimeLeft = document.querySelector('#labelExcerciseTimeLeft');
     /** @type HTMLLabelElement */
-    const labelWorkoutTimePassed = document.querySelector('#labelWorkoutTimePassed');
+    const labelExcerciseTimePassed = document.querySelector('#labelExcerciseTimePassed');
+    /** @type HTMLLabelElement */
+    const labelExcerciseName = document.querySelector('#labelExcerciseName');
 
     if (mode === 'teacher') {
         videoElement.muted = true;
@@ -473,7 +475,8 @@ window.addEventListener('load', async () => {
             {
                 start: moment.duration(x.start).asSeconds(),
                 end: moment.duration(x.end).asSeconds(),
-                cycle: moment.duration(x.cycle).asSeconds()
+                cycle: moment.duration(x.cycle).asSeconds(),
+                name: x.name,
             }
         )).sort((a, b) => a.end - b.end);
 
@@ -536,23 +539,28 @@ window.addEventListener('load', async () => {
 
         let timeLeft;
         let timePassed;
+        let excerciseName;
 
         if (workoutIndex >= 0 && workoutIndex < workout.exercises.length) {
             timePassed = videoElement.currentTime - workout.exercises[workoutIndex].start;
             timeLeft = workout.exercises[workoutIndex].end - timePassed;
+            excerciseName = workout.exercises[workoutIndex].name;
         } else if (workoutIndex < 0) {
             timePassed = videoElement.currentTime;
             timeLeft = workout.exercises[0].start - timePassed;
+            excerciseName = '';
         } else { // workoutIndex >= workout.exercises.length
             timePassed = videoElement.currentTime - workout.exercises[workoutIndex - 1].end;
             timeLeft = videoElement.duration - timePassed;
+            excerciseName = '';
         }
 
         const durationLeft = moment.duration(timeLeft, 'seconds');
         const durationPassed = moment.duration(timePassed, 'seconds');
         
-        labelWorkoutTimeLeft.innerHTML = '-' + withPadding(durationLeft);
-        labelWorkoutTimePassed.innerHTML = withPadding(durationPassed);
+        labelExcerciseTimeLeft.innerHTML = '-' + withPadding(durationLeft);
+        labelExcerciseTimePassed.innerHTML = withPadding(durationPassed);
+        labelExcerciseName.innerHTML = excerciseName;
 
     }
     

@@ -80,7 +80,7 @@
             right: 280;
         }
 
-        .workoutCycle {
+        .excerciseCycle {
             z-index: 10;
             position: absolute;
             color:white;
@@ -90,13 +90,17 @@
             text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
         }
 
-        .workoutCycle #labelWorkoutTimePassed {
+        .excerciseCycle #labelExcerciseTimePassed {
             left: 20;
             position: fixed;
         } 
 
-        .workoutCycle #labelWorkoutTimeLeft {
+        .excerciseCycle #labelExcerciseTimeLeft {
             right: 20;
+            position: fixed;
+        } 
+
+        .excerciseCycle #labelExcerciseName {
             position: fixed;
         } 
 
@@ -113,9 +117,10 @@
     </div>
     <div id="infobox" class="infobox">
     </div>
-    <div id="workoutCycle" class="workoutCycle">
-        <label id="labelWorkoutTimePassed"></label>
-        <label id="labelWorkoutTimeLeft"></label>
+    <div id="excerciseCycle" class="excerciseCycle">
+        <label id="labelExcerciseTimePassed"></label>
+        <label id="labelExcerciseTimeLeft"></label>
+        <label id="labelExcerciseName"></label>
     </div>
 </body>
 
