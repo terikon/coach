@@ -469,7 +469,7 @@ window.addEventListener('load', async () => {
         
         videoElement.src = `workouts/${workout.fileName}`;
 
-        workout.timing = workout.timing.map(x => (
+        workout.exercises = workout.exercises.map(x => (
             {
                 start: moment.duration(x.start).asSeconds(),
                 end: moment.duration(x.end).asSeconds(),
@@ -484,30 +484,30 @@ window.addEventListener('load', async () => {
         const currentTime = videoElement.currentTime;
 
         if (workoutIndex < 0) {
-            if (workout.timing[0] && currentTime > workout.timing[0].start) {
+            if (workout.exercises[0] && currentTime > workout.exercises[0].start) {
                 // already started
                 return workoutIndex;
             }
         }
         
         let nextTime;
-        if (!workout.timing[workoutIndex + 1]) {
-            nextTime = workout.timing[workoutIndex].end;
+        if (!workout.exercises[workoutIndex + 1]) {
+            nextTime = workout.exercises[workoutIndex].end;
         } else {
             workoutIndex += 1;
-            nextTime = workout.timing[workoutIndex].start;
+            nextTime = workout.exercises[workoutIndex].start;
         }
         videoElement.currentTime = nextTime;
         return workoutIndex;
     }
 
-    // -1 if lower, workout.timing.length if greater
+    // -1 if lower, workout.exercises.length if greater
     function getWorkoutIndex(workout, time) {
         time = time + 0.00001; // epsilon that in case [a,b] and [b,c], b will return second workout.
-        let index = workout.timing.findIndex(t => t.start <= time && t.end >= time);
+        let index = workout.exercises.findIndex(t => t.start <= time && t.end >= time);
         if (index < 0) {
-            let length = workout.timing.length;
-            if (time > workout.timing[length - 1].end) return length;
+            let length = workout.exercises.length;
+            if (time > workout.exercises[length - 1].end) return length;
         }
         return index;
     }
@@ -523,12 +523,12 @@ window.addEventListener('load', async () => {
         if (!seeking && userInitiated) {
             if (settings.shouldCycle) {
                 console.log(`workoutIndex: ${workoutIndex}`);
-                if (workoutIndex >= 0 && workoutIndex < workout.timing.length) {
+                if (workoutIndex >= 0 && workoutIndex < workout.exercises.length) {
                     const currentTime = videoElement.currentTime;
-                    const currentWorkoutTiming = workout.timing[workoutIndex];
-                    if (currentTime > currentWorkoutTiming.end) {
+                    const currentExcercise = workout.exercises[workoutIndex];
+                    if (currentTime > currentExcercise.end) {
                         userInitiated = false;
-                        videoElement.currentTime = currentWorkoutTiming.cycle;
+                        videoElement.currentTime = currentExcercise.cycle;
                     }
                 }
             }
@@ -537,14 +537,14 @@ window.addEventListener('load', async () => {
         let timeLeft;
         let timePassed;
 
-        if (workoutIndex >= 0 && workoutIndex < workout.timing.length) {
-            timePassed = videoElement.currentTime - workout.timing[workoutIndex].start;
-            timeLeft = workout.timing[workoutIndex].end - timePassed;
+        if (workoutIndex >= 0 && workoutIndex < workout.exercises.length) {
+            timePassed = videoElement.currentTime - workout.exercises[workoutIndex].start;
+            timeLeft = workout.exercises[workoutIndex].end - timePassed;
         } else if (workoutIndex < 0) {
             timePassed = videoElement.currentTime;
-            timeLeft = workout.timing[0].start - timePassed;
-        } else { // workoutIndex >= workout.timing.length
-            timePassed = videoElement.currentTime - workout.timing[workoutIndex - 1].end;
+            timeLeft = workout.exercises[0].start - timePassed;
+        } else { // workoutIndex >= workout.exercises.length
+            timePassed = videoElement.currentTime - workout.exercises[workoutIndex - 1].end;
             timeLeft = videoElement.duration - timePassed;
         }
 
