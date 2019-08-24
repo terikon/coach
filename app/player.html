@@ -126,6 +126,12 @@
             cursor: pointer;
         }
 
+        .buttonNavigation {
+            width: 40px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
     </style>
 </head>
 
@@ -134,7 +140,8 @@
         <p>Browser doesn't support HTML5 video</p>
     </video>
     <div class="controls">
-        <button id="buttonNext">next</button>
+        <button id="buttonPrevious" class="buttonNavigation">&lt;</button>
+        <button id="buttonNext" class="buttonNavigation">&gt;</button>
         <input type="checkbox" id="checkboxCycle">cycle</button>
     </div>
     <div id="infobox" class="infobox">

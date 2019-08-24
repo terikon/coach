@@ -22,6 +22,8 @@ window.addEventListener('load', async () => {
     const infoboxElement = document.querySelector('#infobox');
     /** @type HTMLButtonElement */
     const buttonNext = document.querySelector('#buttonNext');
+    /** @type HTMLButtonElement */
+    const buttonPrevious = document.querySelector('#buttonPrevious');
     /** @type HTMLInputElement */
     const checkboxCycle = document.querySelector('#checkboxCycle');
     /** @type HTMLLabelElement */
@@ -66,6 +68,14 @@ window.addEventListener('load', async () => {
         let nextExercise = getNextExercise(workout, currentExercise);
         if (nextExercise == null) return;
         currentExercise = nextExercise;
+        videoElement.currentTime = currentExercise.start;
+        updateExerciseGui(currentExercise, videoElement.currentTime);
+    });
+
+    buttonPrevious.addEventListener('click', () => {
+        let previousExercise = getPreviousExercise(workout, currentExercise);
+        if (previousExercise == null) return;
+        currentExercise = previousExercise;
         videoElement.currentTime = currentExercise.start;
         updateExerciseGui(currentExercise, videoElement.currentTime);
     });
@@ -508,6 +518,14 @@ window.addEventListener('load', async () => {
     function getNextExercise(workout, currentExercise) {
         if (!currentExercise) return currentExercise;
         let time = currentExercise.end;
+        let nextExercise = getExerciseByTime(workout, time);
+        if (currentExercise.start === nextExercise.start) return null;
+        return nextExercise;
+    }
+
+    function getPreviousExercise(workout, currentExercise) {
+        if (!currentExercise) return currentExercise;
+        let time = currentExercise.start - 0.001;
         let nextExercise = getExerciseByTime(workout, time);
         if (currentExercise.start === nextExercise.start) return null;
         return nextExercise;
