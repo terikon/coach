@@ -25,11 +25,11 @@ window.addEventListener('load', async () => {
     /** @type HTMLInputElement */
     const checkboxCycle = document.querySelector('#checkboxCycle');
     /** @type HTMLLabelElement */
-    const labelExcerciseTimeLeft = document.querySelector('#labelExcerciseTimeLeft');
+    const labelExerciseTimeLeft = document.querySelector('#labelExerciseTimeLeft');
     /** @type HTMLLabelElement */
-    const labelExcerciseTimePassed = document.querySelector('#labelExcerciseTimePassed');
+    const labelExerciseTimePassed = document.querySelector('#labelExerciseTimePassed');
     /** @type HTMLLabelElement */
-    const labelExcerciseName = document.querySelector('#labelExcerciseName');
+    const labelExerciseName = document.querySelector('#labelExerciseName');
 
     if (mode === 'teacher') {
         videoElement.muted = true;
@@ -57,11 +57,12 @@ window.addEventListener('load', async () => {
     });
 
     let workout = await loadWorkout(workoutName);
-    let workoutIndex = -1;
+    let currentExercise = getExerciseByTime(workout, videoElement.currentTime);
 
     buttonNext.addEventListener('click', () => {
-        workoutIndex = getWorkoutIndex(workout, videoElement.currentTime);
-        workoutIndex = nextWorkout(workout, workoutIndex);
+        currentExercise = getNextExercise(workout, currentExercise);
+        videoElement.currentTime = currentExercise.start;
+        updateExerciseGui(currentExercise, videoElement.currentTime);
     });
 
     videoElement.addEventListener('play', onPlay);
@@ -73,7 +74,6 @@ window.addEventListener('load', async () => {
     let userInitiated = true;
 
     function onPlay() {
-        workoutIndex = getWorkoutIndex(workout, videoElement.currentTime);
         if (userInitiated) {
             console.log('play');
             sendData({ command: 'play', currentTime: videoElement.currentTime });
@@ -94,7 +94,7 @@ window.addEventListener('load', async () => {
     }
 
     function onSeeked() {
-        workoutIndex = getWorkoutIndex(workout, videoElement.currentTime);
+        currentExercise = getExerciseByTime(workout, videoElement.currentTime);
         if (userInitiated) {
             console.log(`seeked to ${videoElement.currentTime}`);
             sendData({ command: 'seek', currentTime: videoElement.currentTime, playerPaused: videoElement.paused });
@@ -483,36 +483,71 @@ window.addEventListener('load', async () => {
         return workout;
     }
 
-    function nextWorkout(workout, workoutIndex) {
-        const currentTime = videoElement.currentTime;
-
-        if (workoutIndex < 0) {
-            if (workout.exercises[0] && currentTime > workout.exercises[0].start) {
-                // already started
-                return workoutIndex;
-            }
-        }
-        
-        let nextTime;
-        if (!workout.exercises[workoutIndex + 1]) {
-            nextTime = workout.exercises[workoutIndex].end;
-        } else {
-            workoutIndex += 1;
-            nextTime = workout.exercises[workoutIndex].start;
-        }
-        videoElement.currentTime = nextTime;
-        return workoutIndex;
+    function getNextExercise(workout, currentExercise) {
+        if (!currentExercise) return currentExercise;
+        let time = currentExercise.end;
+        return getExerciseByTime(workout, time);
     }
 
-    // -1 if lower, workout.exercises.length if greater
-    function getWorkoutIndex(workout, time) {
-        time = time + 0.00001; // epsilon that in case [a,b] and [b,c], b will return second workout.
-        let index = workout.exercises.findIndex(t => t.start <= time && t.end >= time);
-        if (index < 0) {
-            let length = workout.exercises.length;
-            if (time > workout.exercises[length - 1].end) return length;
+    function updateExerciseGui(exercise, time) {
+        let timePassedTxt = '';
+        let timeLeftTxt = '';
+        let exerciseNameTxt = '';
+
+        if (exercise.start <= time && exercise.end >= time) {
+            let timePassed = time - exercise.start;
+            let timeLeft = execise.end - timePassed;
+
+            const durationLeft = moment.duration(timeLeft, 'seconds');
+            const durationPassed = moment.duration(timePassed, 'seconds');
+        
+            timeLeftTxt = '-' + withPadding(durationLeft);
+            timePassedTxt = withPadding(durationPassed);
+            exerciseName = exercise.name;
         }
-        return index;
+    
+        labelExerciseTimePassed.innerHTML = timePassedTxt;
+        labelExerciseTimeLeft.innerHTML = timeLeftTxt;
+        labelExerciseName.innerHTML = exerciseNameTxt;
+    }
+
+    function getExerciseByTime(workout, time) {
+        time = time + 0.00001; // epsilon that in case [a,b] and [b,c], b will return second workout.
+
+        let start = 0;
+        let indexOrAfter = -1;
+        let end;
+        let circle = null;
+        let name = null;
+
+        for (let exercise of workout.exercises) 
+        {
+            if (time < exercise.start) {
+                end = exercise.start;
+                break;
+            }
+            indexOrAfter += 1;
+            if (time <= exercise.end) {
+                start = exercise.start;
+                end = exercise.end;
+                circle = exercise.circle;
+                name = exercise.name;
+                break;
+            }
+            start = exercise.end;
+        }
+
+        if (end === null) { // loop ended
+            end = videoElement.duration;
+        }
+
+        return {
+            indexOrAfter: indexOrAfter,
+            start: start,
+            end: end,
+            circle: circle,
+            name: name,
+        };
     }
 
     var settings = {
@@ -520,48 +555,17 @@ window.addEventListener('load', async () => {
     };
     var seeking = false;
     function onTimeUpdate() {
-        
-        workoutIndex = getWorkoutIndex(workout, videoElement.currentTime);
-
         if (!seeking && userInitiated) {
             if (settings.shouldCycle) {
-                console.log(`workoutIndex: ${workoutIndex}`);
-                if (workoutIndex >= 0 && workoutIndex < workout.exercises.length) {
-                    const currentTime = videoElement.currentTime;
-                    const currentExcercise = workout.exercises[workoutIndex];
-                    if (currentTime > currentExcercise.end) {
-                        userInitiated = false;
-                        videoElement.currentTime = currentExcercise.cycle;
-                    }
+                const currentTime = videoElement.currentTime;
+                if (currentTime > currentExercise.end) {
+                    userInitiated = false;
+                    videoElement.currentTime = currentExercise.cycle;
                 }
             }
         }
 
-        let timeLeft;
-        let timePassed;
-        let excerciseName;
-
-        if (workoutIndex >= 0 && workoutIndex < workout.exercises.length) {
-            timePassed = videoElement.currentTime - workout.exercises[workoutIndex].start;
-            timeLeft = workout.exercises[workoutIndex].end - timePassed;
-            excerciseName = workout.exercises[workoutIndex].name;
-        } else if (workoutIndex < 0) {
-            timePassed = videoElement.currentTime;
-            timeLeft = workout.exercises[0].start - timePassed;
-            excerciseName = '';
-        } else { // workoutIndex >= workout.exercises.length
-            timePassed = videoElement.currentTime - workout.exercises[workoutIndex - 1].end;
-            timeLeft = videoElement.duration - timePassed;
-            excerciseName = '';
-        }
-
-        const durationLeft = moment.duration(timeLeft, 'seconds');
-        const durationPassed = moment.duration(timePassed, 'seconds');
-        
-        labelExcerciseTimeLeft.innerHTML = '-' + withPadding(durationLeft);
-        labelExcerciseTimePassed.innerHTML = withPadding(durationPassed);
-        labelExcerciseName.innerHTML = excerciseName;
-
+        updateExerciseGui(currentExercise, videoElement.currentTime);
     }
     
     setSettings(settings);
