@@ -490,25 +490,29 @@ window.addEventListener('load', async () => {
     }
 
     function updateExerciseGui(exercise, time) {
+        if (mode === 'student') return;
+
         let timePassedTxt = '';
         let timeLeftTxt = '';
         let exerciseNameTxt = '';
 
         if (exercise.start <= time && exercise.end >= time) {
             let timePassed = time - exercise.start;
-            let timeLeft = execise.end - timePassed;
+            let timeLeft = exercise.end - time;
 
             const durationLeft = moment.duration(timeLeft, 'seconds');
             const durationPassed = moment.duration(timePassed, 'seconds');
         
             timeLeftTxt = '-' + withPadding(durationLeft);
             timePassedTxt = withPadding(durationPassed);
-            exerciseName = exercise.name;
+            exerciseNameTxt = exercise.name;
         }
     
         labelExerciseTimePassed.innerHTML = timePassedTxt;
         labelExerciseTimeLeft.innerHTML = timeLeftTxt;
         labelExerciseName.innerHTML = exerciseNameTxt;
+
+        console.log(exercise);
     }
 
     function getExerciseByTime(workout, time) {
@@ -517,7 +521,7 @@ window.addEventListener('load', async () => {
         let start = 0;
         let indexOrAfter = -1;
         let end;
-        let circle = null;
+        let cycle = null;
         let name = null;
 
         for (let exercise of workout.exercises) 
@@ -530,7 +534,7 @@ window.addEventListener('load', async () => {
             if (time <= exercise.end) {
                 start = exercise.start;
                 end = exercise.end;
-                circle = exercise.circle;
+                cycle = exercise.cycle;
                 name = exercise.name;
                 break;
             }
@@ -545,7 +549,7 @@ window.addEventListener('load', async () => {
             indexOrAfter: indexOrAfter,
             start: start,
             end: end,
-            circle: circle,
+            cycle: cycle,
             name: name,
         };
     }
@@ -556,11 +560,13 @@ window.addEventListener('load', async () => {
     var seeking = false;
     function onTimeUpdate() {
         if (!seeking && userInitiated) {
-            if (settings.shouldCycle) {
-                const currentTime = videoElement.currentTime;
-                if (currentTime > currentExercise.end) {
+            const currentTime = videoElement.currentTime;
+            if (currentTime > currentExercise.end) {
+                if (settings.shouldCycle && currentExercise.cycle != null) {
                     userInitiated = false;
                     videoElement.currentTime = currentExercise.cycle;
+                } else {
+                    currentExercise = getExerciseByTime(workout, currentTime);
                 }
             }
         }
