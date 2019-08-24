@@ -30,6 +30,8 @@ window.addEventListener('load', async () => {
     const labelExerciseTimePassed = document.querySelector('#labelExerciseTimePassed');
     /** @type HTMLLabelElement */
     const labelExerciseName = document.querySelector('#labelExerciseName');
+    /** @type HTMLProgressElement */
+    const progressExercise = document.querySelector('#progressExercise');
 
     if (mode === 'teacher') {
         videoElement.muted = true;
@@ -58,6 +60,7 @@ window.addEventListener('load', async () => {
 
     let workout = await loadWorkout(workoutName);
     let currentExercise = getExerciseByTime(workout, videoElement.currentTime);
+    updateExerciseGui(currentExercise, videoElement.currentTime);
 
     buttonNext.addEventListener('click', () => {
         currentExercise = getNextExercise(workout, currentExercise);
@@ -70,6 +73,8 @@ window.addEventListener('load', async () => {
     videoElement.addEventListener('seeking', onSeeking);
     videoElement.addEventListener('seeked', onSeeked);
     videoElement.addEventListener('timeupdate', onTimeUpdate);
+
+    progressExercise.addEventListener('click', onProgressClick);
 
     let userInitiated = true;
 
@@ -95,12 +100,21 @@ window.addEventListener('load', async () => {
 
     function onSeeked() {
         currentExercise = getExerciseByTime(workout, videoElement.currentTime);
+        updateExerciseGui(currentExercise, videoElement.currentTime);
         if (userInitiated) {
             console.log(`seeked to ${videoElement.currentTime}`);
             sendData({ command: 'seek', currentTime: videoElement.currentTime, playerPaused: videoElement.paused });
         }
         userInitiated = seeking;
         seeking = false;
+    }
+
+    function onProgressClick(e) {
+        if (progressExercise.max == null || !currentExercise) return;
+        var valueClicked = e.offsetX * this.max / this.offsetWidth;
+        let time = currentExercise.start + (valueClicked / progressExercise.max) * (currentExercise.end - currentExercise.start);
+        videoElement.currentTime = time;
+        updateExerciseGui(currentExercise, videoElement.currentTime);
     }
 
     function onData(event) {
@@ -495,6 +509,8 @@ window.addEventListener('load', async () => {
         let timePassedTxt = '';
         let timeLeftTxt = '';
         let exerciseNameTxt = '';
+        let progressMax = null;
+        let progressValue = null;
 
         if (exercise.start <= time && exercise.end >= time) {
             let timePassed = time - exercise.start;
@@ -506,11 +522,16 @@ window.addEventListener('load', async () => {
             timeLeftTxt = '-' + withPadding(durationLeft);
             timePassedTxt = withPadding(durationPassed);
             exerciseNameTxt = exercise.name;
+            progressMax = exercise.end - exercise.start;
+            progressValue = timePassed;
         }
     
         labelExerciseTimePassed.innerHTML = timePassedTxt;
         labelExerciseTimeLeft.innerHTML = timeLeftTxt;
         labelExerciseName.innerHTML = exerciseNameTxt;
+        progressExercise.hidden = progressMax == null;
+        progressExercise.max = progressMax;
+        progressExercise.value = progressValue;
 
         console.log(exercise);
     }

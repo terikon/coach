@@ -104,6 +104,28 @@
             position: fixed;
         } 
 
+        progress {
+           -webkit-appearance: none;
+        }
+
+        ::-webkit-progress-inner-element {
+            background-color: lightgray;
+        }
+
+        ::-webkit-progress-value {
+            background-color: white;
+        }
+
+        .progressExercise {
+            height: 5px;
+            position: fixed;
+            top: 60px;
+            width: auto;
+            left: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 
@@ -121,6 +143,7 @@
         <label id="labelExerciseTimePassed"></label>
         <label id="labelExerciseTimeLeft"></label>
         <label id="labelExerciseName"></label>
+        <progress id="progressExercise" class="progressExercise" hidden="true"></progress>
     </div>
 </body>
 
