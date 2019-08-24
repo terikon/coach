@@ -63,7 +63,9 @@ window.addEventListener('load', async () => {
     updateExerciseGui(currentExercise, videoElement.currentTime);
 
     buttonNext.addEventListener('click', () => {
-        currentExercise = getNextExercise(workout, currentExercise);
+        let nextExercise = getNextExercise(workout, currentExercise);
+        if (nextExercise == null) return;
+        currentExercise = nextExercise;
         videoElement.currentTime = currentExercise.start;
         updateExerciseGui(currentExercise, videoElement.currentTime);
     });
@@ -95,10 +97,12 @@ window.addEventListener('load', async () => {
     }
 
     function onSeeking() {
+        console.log('onSeeking');
         seeking = true;
     }
 
     function onSeeked() {
+        console.log('onSeeked');
         currentExercise = getExerciseByTime(workout, videoElement.currentTime);
         updateExerciseGui(currentExercise, videoElement.currentTime);
         if (userInitiated) {
@@ -106,7 +110,11 @@ window.addEventListener('load', async () => {
             sendData({ command: 'seek', currentTime: videoElement.currentTime, playerPaused: videoElement.paused });
         }
         userInitiated = seeking;
-        seeking = false;
+        if (timeUpdateTask == null) {
+            seeking = false;
+        } else {
+            seekingEnded = true;
+        }
     }
 
     function onProgressClick(e) {
@@ -119,7 +127,7 @@ window.addEventListener('load', async () => {
 
     function onData(event) {
         console.log(`Received data: ${event.data}`);
-        var data = typeof(event.data) === 'string' ? JSON.parse(event.data) : event.data;
+        var data = typeof (event.data) === 'string' ? JSON.parse(event.data) : event.data;
 
         userInitiated = false;
 
@@ -174,7 +182,7 @@ window.addEventListener('load', async () => {
                     }
                 }
                 break;
-        }        
+        }
     }
 
     window.onData = onData; // for debugging
@@ -235,9 +243,9 @@ window.addEventListener('load', async () => {
 
 
     var configuration = {
-      'iceServers': [{
-        'urls': 'stun:stun.l.google.com:19302'
-      }]
+        'iceServers': [{
+            'urls': 'stun:stun.l.google.com:19302'
+        }]
     };
     //let configuration = null;
 
@@ -336,7 +344,7 @@ window.addEventListener('load', async () => {
             sendData({ command: 'layout', layout: 'group' });
             hangountsMuteMyself(true, 'Student.*');
         } else {
-            switchLayoutToStudent(layout);    
+            switchLayoutToStudent(layout);
         }
     }
 
@@ -500,7 +508,9 @@ window.addEventListener('load', async () => {
     function getNextExercise(workout, currentExercise) {
         if (!currentExercise) return currentExercise;
         let time = currentExercise.end;
-        return getExerciseByTime(workout, time);
+        let nextExercise = getExerciseByTime(workout, time);
+        if (currentExercise.start === nextExercise.start) return null;
+        return nextExercise;
     }
 
     function updateExerciseGui(exercise, time) {
@@ -534,7 +544,7 @@ window.addEventListener('load', async () => {
         progressExercise.max = progressMax;
         progressExercise.value = progressValue;
 
-        console.log(exercise);
+        //console.log(exercise);
     }
 
     function getExerciseByTime(workout, time) {
@@ -547,8 +557,7 @@ window.addEventListener('load', async () => {
         let name = null;
         let connection = true;
 
-        for (let exercise of workout.exercises) 
-        {
+        for (let exercise of workout.exercises) {
             if (time < exercise.start) {
                 end = exercise.start;
                 break;
@@ -575,7 +584,7 @@ window.addEventListener('load', async () => {
             end: end,
             cycle: cycle,
             name: name,
-            connection: connection, 
+            connection: connection,
         };
     }
 
@@ -583,22 +592,37 @@ window.addEventListener('load', async () => {
         shouldCycle: true
     };
     var seeking = false;
+    var seekingEnded = false;
+    var timeUpdateTask = null;
     function onTimeUpdate() {
-        if (!seeking && userInitiated) {
-            const currentTime = videoElement.currentTime;
-            if (currentTime > currentExercise.end) {
-                if (settings.shouldCycle && currentExercise.cycle != null) {
-                    userInitiated = false;
-                    videoElement.currentTime = currentExercise.cycle;
-                } else {
-                    currentExercise = getExerciseByTime(workout, currentTime);
+        console.log('onTimeUpdate');
+        if (timeUpdateTask != null) {
+            clearTimeout(timeUpdateTask);
+        }
+        // timeout is workaround for timeUpdate happens earlier that seeking evet, when video playing and clicking on progress control
+        timeUpdateTask = setTimeout(() => {
+            if (!seeking && userInitiated) {
+                const currentTime = videoElement.currentTime;
+                if (currentTime > currentExercise.end) {
+                    if (settings.shouldCycle && currentExercise.cycle != null) {
+                        userInitiated = false;
+                        videoElement.currentTime = currentExercise.cycle;
+                    } else {
+                        currentExercise = getExerciseByTime(workout, currentTime);
+                    }
                 }
             }
-        }
 
-        updateExerciseGui(currentExercise, videoElement.currentTime);
+            updateExerciseGui(currentExercise, videoElement.currentTime);
+
+            timeUpdateTask = null;
+            if (seekingEnded) {
+                seeking = false;
+                seekingEnded = false;
+            }
+        }, 1);
     }
-    
+
     setSettings(settings);
     checkboxCycle.addEventListener('change', function() {
         settings.shouldCycle = this.checked;
