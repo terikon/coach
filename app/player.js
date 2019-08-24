@@ -34,6 +34,8 @@ window.addEventListener('load', async () => {
     const labelExerciseName = document.querySelector('#labelExerciseName');
     /** @type HTMLProgressElement */
     const progressExercise = document.querySelector('#progressExercise');
+    /** @type HTMLDivElement */
+    const pointExerciseCycle = document.querySelector('#pointExerciseCycle');
 
     if (mode === 'teacher') {
         videoElement.muted = true;
@@ -539,6 +541,7 @@ window.addEventListener('load', async () => {
         let exerciseNameTxt = '';
         let progressMax = null;
         let progressValue = null;
+        let cycleOffset = null;
 
         if (exercise.start <= time && exercise.end >= time) {
             let timePassed = time - exercise.start;
@@ -552,6 +555,7 @@ window.addEventListener('load', async () => {
             exerciseNameTxt = exercise.connection ? '' : exercise.name || `Exercise ${exercise.indexOrAfter + 1}`;
             progressMax = exercise.end - exercise.start;
             progressValue = timePassed;
+            cycleOffset = exercise.cycle == null ? 0 : progressExercise.offsetLeft + progressExercise.clientWidth * ((exercise.cycle - exercise.start) / (exercise.end - exercise.start));
         }
     
         labelExerciseTimePassed.innerHTML = timePassedTxt;
@@ -559,8 +563,10 @@ window.addEventListener('load', async () => {
         labelExerciseName.innerHTML = exerciseNameTxt;
 
         progressExercise.hidden = progressMax == null;
+        pointExerciseCycle.hidden = progressMax == null || exercise.cycle == null;
         progressExercise.max = progressMax;
         progressExercise.value = progressValue;
+        pointExerciseCycle.style.left = cycleOffset;
 
         //console.log(exercise);
     }

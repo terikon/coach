@@ -76,7 +76,7 @@
         .controls {
             z-index: 10;
             position: absolute;
-            bottom: 50;
+            bottom: 35;
             right: 280;
         }
 
@@ -126,6 +126,14 @@
             cursor: pointer;
         }
 
+        .pointExerciseCycle {
+            height: 5px;
+            width: 5px;
+            background-color: yellow;
+            position: fixed;
+            top: 60px;
+        }
+
         .buttonNavigation {
             width: 40px;
             margin-left: 10px;
@@ -151,6 +159,7 @@
         <label id="labelExerciseTimeLeft"></label>
         <label id="labelExerciseName"></label>
         <progress id="progressExercise" class="progressExercise" hidden="true"></progress>
+        <div id="pointExerciseCycle" class="pointExerciseCycle" hidden="true"></div>
     </div>
 </body>
 
