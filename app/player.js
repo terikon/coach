@@ -521,7 +521,7 @@ window.addEventListener('load', async () => {
         
             timeLeftTxt = '-' + withPadding(durationLeft);
             timePassedTxt = withPadding(durationPassed);
-            exerciseNameTxt = exercise.name;
+            exerciseNameTxt = exercise.connection ? '' : exercise.name || `Exercise ${exercise.indexOrAfter + 1}`;
             progressMax = exercise.end - exercise.start;
             progressValue = timePassed;
         }
@@ -529,6 +529,7 @@ window.addEventListener('load', async () => {
         labelExerciseTimePassed.innerHTML = timePassedTxt;
         labelExerciseTimeLeft.innerHTML = timeLeftTxt;
         labelExerciseName.innerHTML = exerciseNameTxt;
+
         progressExercise.hidden = progressMax == null;
         progressExercise.max = progressMax;
         progressExercise.value = progressValue;
@@ -544,6 +545,7 @@ window.addEventListener('load', async () => {
         let end;
         let cycle = null;
         let name = null;
+        let connection = true;
 
         for (let exercise of workout.exercises) 
         {
@@ -557,6 +559,7 @@ window.addEventListener('load', async () => {
                 end = exercise.end;
                 cycle = exercise.cycle;
                 name = exercise.name;
+                connection = false;
                 break;
             }
             start = exercise.end;
@@ -572,6 +575,7 @@ window.addEventListener('load', async () => {
             end: end,
             cycle: cycle,
             name: name,
+            connection: connection, 
         };
     }
 
