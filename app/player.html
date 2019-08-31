@@ -152,7 +152,13 @@
         <button id="buttonNext" class="buttonNavigation">&gt;</button>
         <input type="checkbox" id="checkboxCycle">cycle</button>
         <div id="app">
-            <h2>{{product}} came from vue</h2>
+            <ul>
+                <li v-for="product in products">
+                    {{product}}
+                    <span v-if="product === 'Oranges2'">GOOD</span>
+                </li>
+            </ul>
+            <span>Total: {{totalProducts}}</span>
         </div>
     </div>
     <div id="infobox" class="infobox">
@@ -176,7 +182,22 @@
 const app = new Vue({
     el: '#app',
     data: {
-        product: 'Boots',
+        products: [
+            'Boots',
+            'Lamp',
+        ]
+    },
+    computed: {
+        totalProducts() {
+            return this.products.length;
+        }
+    },
+    created() {
+        this.products = [
+            'Boots2',
+            'Lamp2',
+            'Oranges2',
+        ]
     }
 });
 </script>
