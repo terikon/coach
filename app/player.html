@@ -155,10 +155,12 @@
             <ul>
                 <li v-for="product in products">
                     {{product}}
+                    <input type="text" v-model="product">
                     <span v-if="product === 'Oranges2'">GOOD</span>
+                    <button @click="product.value += 'a'">+</button>
                 </li>
             </ul>
-            <span>Total: {{totalProducts}}</span>
+            <span>Total: {{ totalProducts}}</span>
         </div>
     </div>
     <div id="infobox" class="infobox">
