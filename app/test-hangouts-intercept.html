@@ -1,0 +1,39 @@
+<html>
+<title>Camera frame</title>
+
+<head>
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: black;
+        }
+
+        html {
+            display: table;
+            margin: auto;
+        }
+
+        body {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .video {
+            width: 100%;
+            transform: scaleX(-1);
+        }
+    </style>
+
+</head>
+
+<body>
+    <iframe id="iframe1" src="https://hangouts.google.com" allow="camera" width="1500px" height="80%" >
+
+    </iframe>
+    <iframe id="iframe2"></iframe>
+</body>
+
+<script src="node_modules/vue/dist/vue.js"></script>
+
+</html>

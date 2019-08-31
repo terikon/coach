@@ -1,5 +1,24 @@
 console.log(`extension ID: ${chrome.runtime.id}`);
 
+//////////// iframe handling ////
+var HEADERS_TO_STRIP_LOWERCASE = [
+  'content-security-policy',
+  'x-frame-options',
+];
+
+chrome.webRequest.onHeadersReceived.addListener(
+  function (details) {
+    return {
+      responseHeaders: details.responseHeaders.filter(function (header) {
+        return HEADERS_TO_STRIP_LOWERCASE.indexOf(header.name.toLowerCase()) < 0;
+      })
+    };
+  }, {
+    urls: ["<all_urls>"]
+  }, ["blocking", "responseHeaders"]);
+//////////////////////////////////
+
+
 chrome.extension.isAllowedFileSchemeAccess(allowed => {
   if (!allowed) {
     console.log("Please enable AllowedFileSchemeAccess for the extension in chrome://extensions");
