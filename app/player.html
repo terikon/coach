@@ -151,6 +151,9 @@
         <button id="buttonPrevious" class="buttonNavigation">&lt;</button>
         <button id="buttonNext" class="buttonNavigation">&gt;</button>
         <input type="checkbox" id="checkboxCycle">cycle</button>
+        <div id="app">
+            <h2>{{product}} came from vue</h2>
+        </div>
     </div>
     <div id="infobox" class="infobox">
     </div>
@@ -166,6 +169,16 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script src="node_modules/moment/min/moment.min.js"></script>
+<script src="node_modules/vue/dist/vue.js"></script>
 <script src="player.js"></script>
+
+<script>
+const app = new Vue({
+    el: '#app',
+    data: {
+        product: 'Boots',
+    }
+});
+</script>
 
 </html>
