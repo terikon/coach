@@ -11,7 +11,13 @@ console.log(`starting server on port ${port}`);
 
 var fileServer = new nodeStatic.Server();
 var app = http.createServer(function (req, res) {
-  fileServer.serve(req, res);
+  req.addListener('end', function () {
+    if (req.url.endsWith('.vue')) {
+      fileServer.serveFile(req.url, 200, { 'Content-Type': 'application/javascript' }, req, res);
+    } else {
+      fileServer.serve(req, res);
+    }
+  }).resume();
 }).listen(port);
 
 var io = socketIO.listen(app);
