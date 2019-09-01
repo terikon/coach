@@ -78,11 +78,12 @@ function injectScript(/** @type chrome.tabs.Tab */tab, contentScriptName) {
   chrome.tabs.executeScript(tab.id, { file: contentScriptName });
 }
 
-const hangoutsUrlRegex = /https:\/\/hangouts.google.com\/call\//g;
+const hangoutsCallUrlRegex = /https:\/\/hangouts.google.com\/call\//g;
 const playerUrlRegex = /player.html/g;
+const hangoutsUrlRegex = /hangouts.google.com/g;
 
 function injectIfMatches(/** @type chrome.tabs.Tab */tab) {
-  if (tab.url.match(hangoutsUrlRegex)) {
+  if (tab.url.match(hangoutsCallUrlRegex)) {
     injectScript(tab, 'contentScript-hangouts.js');
   }
   if (tab.url.match(playerUrlRegex)) {
@@ -134,10 +135,11 @@ chrome.runtime.onConnect.addListener(port => {
 var onTopWindowIds = {};
 var onBottomWindowIds = {};
 
-chrome.runtime.onMessageExternal.addListener(async (request, sender, sendResponse) => {
+async function handleHangoutsMessage(request, sender, sendResponse) {
+  console.log(`background script got external hangouts request ${JSON.stringify(request)}`);
+}
 
-  if (!sender.url.match(playerUrlRegex)) return;
-
+async function handlePlayerMessage(request, sender, sendResponse) {
   console.log(`background script got external player request ${JSON.stringify(request)}`);
 
   switch (request.command) {
@@ -202,6 +204,13 @@ chrome.runtime.onMessageExternal.addListener(async (request, sender, sendRespons
         sendResponse(layout);
       });
   }
+}
+
+chrome.runtime.onMessageExternal.addListener(async (request, sender, sendResponse) => {
+
+  if (sender.url.match(hangoutsUrlRegex)) await handleHangoutsMessage(request, sender, sendResponse);
+
+  if (sender.url.match(playerUrlRegex)) await handlePlayerMessage(request, sender, sendResponse);
 
 });
 

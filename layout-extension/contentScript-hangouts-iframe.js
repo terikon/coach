@@ -10,4 +10,5 @@ function injectScriptText(scriptText) {
   (document.head||document.documentElement).appendChild(s);
 }
 
-injectScriptFile( chrome.extension.getURL('override-window.js'));
+injectScriptText(`window._extensionId = '${chrome.runtime.id}'`);
+injectScriptFile(chrome.extension.getURL('override-window.js'));

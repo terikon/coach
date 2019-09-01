@@ -7,7 +7,7 @@
     "webRequest", "webRequestBlocking", "\u003Call_urls>" // for iframe handling
   ],
   "externally_connectable": {
-    "matches": ["*://viskin.dyndns.org/*"]
+    "matches": ["*://viskin.dyndns.org/*", "https://hangouts.google.com/*"]
   },
   "background": {
     "scripts": ["node_modules/socket.io-client/dist/socket.io.js", "node_modules/webrtc-adapter/out/adapter.js", "background.js"],
