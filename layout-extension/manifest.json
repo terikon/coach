@@ -10,7 +10,7 @@
     "matches": ["*://viskin.dyndns.org/*", "https://hangouts.google.com/*"]
   },
   "background": {
-    "scripts": ["node_modules/socket.io-client/dist/socket.io.js", "node_modules/webrtc-adapter/out/adapter.js", "background.js"],
+    "page": "background.html",
     "persistent": true // for iframe handling
   },
   "browser_action": {
