@@ -29,6 +29,9 @@
       "contentScript-hangouts-iframe.js"
     ]
   }],
-  "web_accessible_resources": ["override-window.js"]
+  "web_accessible_resources": [
+    "override-window.js",
+    "content-module.js"
+  ]
   // end of for iframe handling
 }
