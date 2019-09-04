@@ -1,3 +1,13 @@
+Vue.use(window.httpVueLoader);
+
+const app = new Vue({
+  el: '#app',
+  components: {
+    'hangouts-caller': 'url:components/hangouts-caller.vue',
+  }
+});
+
+
 /** @type HTMLLabelElement */ const switchMode = document.getElementById('switchMode');
 /** @type HTMLInputElement */ const labelMode = document.getElementById('labelMode');
 

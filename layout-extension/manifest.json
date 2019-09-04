@@ -18,6 +18,7 @@
   },
   "options_page": "options.html",
   "manifest_version": 2,
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'", // unsafe-eval for vue.js
   // for iframe handling
   "content_scripts": [{
     "all_frames": true,
@@ -31,7 +32,8 @@
   }],
   "web_accessible_resources": [
     "override-window.js",
-    "content-module.js"
+    "content-module.js",
+    "components/*"
   ]
   // end of for iframe handling
 }
