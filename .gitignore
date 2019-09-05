@@ -11,8 +11,14 @@ package-lock.json
 # Optional npm cache directory
 .npm
 
+# vs
+.vs/
+
 # video files
 /videos/
 
 # dist
 dist/
+
+# tryouts
+/vue-tryouts

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import HangoutsCaller from './components/hangouts-caller.vue'
+import HangoutsCaller from './components/HangoutsCaller.vue'
 
 export default {
   name: 'app',

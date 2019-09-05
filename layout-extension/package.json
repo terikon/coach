@@ -5,7 +5,8 @@
   "main": "background.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --mode dev"
+    "build": "vue-cli-service build --mode dev",
+    "watch": "vue-cli-service build --mode dev --watch"
   },
   "dependencies": {
     "@types/chrome": "0.0.85",
