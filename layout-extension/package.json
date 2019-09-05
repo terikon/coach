@@ -3,18 +3,28 @@
   "version": "1.0.0",
   "description": "",
   "main": "background.js",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build --mode dev"
+  },
   "dependencies": {
     "@types/chrome": "0.0.85",
     "@types/socket.io-client": "^1.4.32",
-    "http-vue-loader": "^1.4.0",
     "socket.io": "^2.2.0",
     "vue": "^2.6.10",
     "webrtc-adapter": "^7.2.3"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "@vue/cli-service": "^3.11.0",
+    "vue-template-compiler": "^2.6.10"
   },
-  "author": "",
-  "license": "ISC"
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
 }

@@ -33,7 +33,7 @@
   "web_accessible_resources": [
     "override-window.js",
     "content-module.js",
-    "components/*"
+    "dist/*"
   ]
   // end of for iframe handling
 }

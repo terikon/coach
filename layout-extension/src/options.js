@@ -1,12 +1,9 @@
-Vue.use(window.httpVueLoader);
+import Vue from 'vue'
+import options from './options.vue'
 
 const app = new Vue({
-  el: '#app',
-  components: {
-    'hangouts-caller': 'url:components/hangouts-caller.vue',
-  }
-});
-
+  render: function (h) { return h(options) },
+}).$mount('#app')
 
 /** @type HTMLLabelElement */ const switchMode = document.getElementById('switchMode');
 /** @type HTMLInputElement */ const labelMode = document.getElementById('labelMode');
