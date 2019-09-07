@@ -1,8 +1,12 @@
 <template>
+
   <div class="root-html">
     <div class="root-body">
+
       <div class="controls">
-        <select class="cameras"></select>
+        <select class="cameras">
+          <option v-for="camera in cameras" :key="camera.deviceId" :value="camera.deviceId">{{camera.name}}</option>
+        </select>
         <button class="mirrorbutton">toggle mirror</button>
         <button class="trainerbutton">toggle trainer</button>
       </div>
@@ -10,33 +14,69 @@
         <p>Browser doesn't support HTML5 video</p>
       </video>
       <img src="images/trainer-layers.png" class="video trainercontrols" />
+
     </div>
   </div>
+
 </template>
 
 <script>
+
 export default {
   data: function() {
     return {
-      greeting: "Hello"
-    };
+      cameras: [
+       {deviceId: "aaa", name: 1},
+       {deviceId: "bbb", name: 2}
+      ],
+    }
+  },
+  methods: {
+
+  },
+  beforeCreate: function() {
+
+  },
+  created: function() {
+
+  },
+  beforeMount: function() {
+
+  },
+  mounted: function() {
+
+  },
+  beforeUpdate: function() {
+
+  },
+  updated: function() {
+
+  },
+  beforeDestroy: function() {
+
+  },
+  destroyed: function() {
+
   }
+
 };
+
 </script>
 
 <style scoped>
-root-html,
-root-body {
+
+.root-html,
+.root-body {
   height: 100%;
   background: black;
 }
 
-root-html {
+.root-html {
   display: table;
   margin: auto;
 }
 
-root-body {
+.root-body {
   display: table-cell;
   vertical-align: middle;
 }
@@ -112,4 +152,5 @@ root-body {
   pointer-events: none;
   height: auto;
 }
+
 </style>
