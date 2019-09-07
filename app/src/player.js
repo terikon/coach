@@ -1,5 +1,30 @@
 'use strict';
 
+import moment from 'moment';
+import Vue from 'vue';
+
+const app = new Vue({
+  el: '#app',
+  data: {
+      products: [
+          'Boots',
+          'Lamp',
+      ]
+  },
+  computed: {
+      totalProducts() {
+          return this.products.length;
+      }
+  },
+  created() {
+      this.products = [
+          'Boots2',
+          'Lamp2',
+          'Oranges2',
+      ]
+  }
+});
+
 const skipSwitchLayout = false;
 
 const useRTC = false;
@@ -248,7 +273,7 @@ window.addEventListener('load', async () => {
             dataChannel.send(serialized);
 
             resolve();
-            
+
         });
     }
 
@@ -371,7 +396,7 @@ window.addEventListener('load', async () => {
 
             // let newWindowHeight = window.outerHeight;
             // let newWindowWidth = window.outerWidth;
-        
+
             // if (Math.abs(newWindowHeight - windowHeight) === 1 || Math.abs(newWindowWidth - windowWidth) === 1) {
             //     videoElement.muted = !videoElement.muted;
             // }
@@ -380,7 +405,7 @@ window.addEventListener('load', async () => {
             // windowWidth = newWindowWidth;
         } else if (mode === 'teacher') {
             const width = window.outerWidth;
-            
+
             if (width % 10 === 0) {
                 switchLayout('group');
             } else if (width % 10 === 1) {
@@ -391,7 +416,7 @@ window.addEventListener('load', async () => {
                 switchLayout('Student - 3');
             }
 
-            
+
         }
     });
 
@@ -491,7 +516,7 @@ window.addEventListener('load', async () => {
         infoboxElement.innerHTML = msg;
         // infoboxElement.classList.remove('on');
         // setTimeout(() => {
-        //     infoboxElement.classList.add('on');    
+        //     infoboxElement.classList.add('on');
         // }, 0);
     }
 
@@ -502,7 +527,7 @@ window.addEventListener('load', async () => {
 
         const response = await fetch(jsonName);
         const workout = await response.json();
-        
+
         videoElement.src = `workouts/${workout.fileName}`;
 
         workout.exercises = workout.exercises.map(x => (
@@ -549,7 +574,7 @@ window.addEventListener('load', async () => {
 
             const durationLeft = moment.duration(timeLeft, 'seconds');
             const durationPassed = moment.duration(timePassed, 'seconds');
-        
+
             timeLeftTxt = '-' + withPadding(durationLeft);
             timePassedTxt = withPadding(durationPassed);
             exerciseNameTxt = exercise.connection ? '' : exercise.name || `Exercise ${exercise.indexOrAfter + 1}`;
@@ -557,7 +582,7 @@ window.addEventListener('load', async () => {
             progressValue = timePassed;
             cycleOffset = exercise.cycle == null ? 0 : progressExercise.offsetLeft + progressExercise.clientWidth * ((exercise.cycle - exercise.start) / (exercise.end - exercise.start));
         }
-    
+
         labelExerciseTimePassed.innerHTML = timePassedTxt;
         labelExerciseTimeLeft.innerHTML = timeLeftTxt;
         labelExerciseName.innerHTML = exerciseNameTxt;

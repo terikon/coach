@@ -1,1 +1,1 @@
-.\app\self-camera.html
+.\app\dist\self-camera.html

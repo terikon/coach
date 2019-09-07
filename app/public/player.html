@@ -93,16 +93,16 @@
         .exerciseCycle #labelExerciseTimePassed {
             left: 20;
             position: fixed;
-        } 
+        }
 
         .exerciseCycle #labelExerciseTimeLeft {
             right: 20;
             position: fixed;
-        } 
+        }
 
         .exerciseCycle #labelExerciseName {
             position: fixed;
-        } 
+        }
 
         progress {
            -webkit-appearance: none;
@@ -176,32 +176,10 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-<script src="node_modules/moment/min/moment.min.js"></script>
+<!--<script src="node_modules/moment/min/moment.min.js"></script>
 <script src="node_modules/vue/dist/vue.js"></script>
-<script src="player.js"></script>
+<script src="player.js"></script> -->
 
-<script>
-const app = new Vue({
-    el: '#app',
-    data: {
-        products: [
-            'Boots',
-            'Lamp',
-        ]
-    },
-    computed: {
-        totalProducts() {
-            return this.products.length;
-        }
-    },
-    created() {
-        this.products = [
-            'Boots2',
-            'Lamp2',
-            'Oranges2',
-        ]
-    }
-});
-</script>
+<!-- built files will be auto injected -->
 
 </html>
