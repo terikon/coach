@@ -1,7 +1,7 @@
 set catch=goto Error
 
 cd app
-npm run watchserver || %catch%
+npm run buildandserver || %catch%
 goto Exit
 
 :Error

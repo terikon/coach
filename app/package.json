@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --mode dev",
     "watch": "vue-cli-service build --mode dev --watch",
-    "watchserver": "npm run watch && npm run server"
+    "buildandserver": "npm run build && npm run server"
   },
   "dependencies": {
     "moment": "^2.24.0",
