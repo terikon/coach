@@ -1,3 +1,4 @@
+import moment from 'moment';
 import Vue from 'vue'
 import App from './App.vue'
 
