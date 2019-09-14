@@ -1,7 +1,6 @@
 set catch=goto Error
 
-cd app
-npm run server || %catch%
+npm run server --prefix app || %catch%
 goto Exit
 
 :Error
