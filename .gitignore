@@ -22,3 +22,8 @@ dist/
 
 # tryouts
 /vue-tryouts
+
+# certs
+*.crt
+*.pfx
+*.key

@@ -2,15 +2,24 @@
 
 const port = 8080;
 
-var os = require('os');
-var nodeStatic = require('node-static');
-var http = require('http');
-var socketIO = require('socket.io');
+const os = require('os');
+const nodeStatic = require('node-static');
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
+const socketIO = require('socket.io');
 
 console.log(`starting server on port ${port}`);
 
+const httpsOptions = {
+  //key: fs.readFileSync('../cert/private.pem'),
+  //cert: fs.readFileSync('../cert/certificate.pem')
+  pfx: fs.readFileSync('../cert/certificate_combined.pfx')
+};
+
 var fileServer = new nodeStatic.Server();
-var app = http.createServer(function (req, res) {
+//var app = http.createServer(function (req, res) {
+var app = https.createServer(httpsOptions, function (req, res) {
   req.addListener('end', function () {
     if (req.url.endsWith('.vue')) {
       fileServer.serveFile(req.url, 200, { 'Content-Type': 'application/javascript' }, req, res);
