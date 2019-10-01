@@ -1,0 +1,16 @@
+student layout - on start
+teacher group, unmute, then switch to 1, 1 does not hear teacher
+unmute button (comment) on extension
+teacher - say to all
+switching number should hide small screen, remove 2nd extenstion
+
+excersize splitting
+control - next excersize only by teacher order (button on player)
+cycle when talking to someone - should be for all the group (I think countdown time is important)
+time to end of the targil
+
+small player
+hangouts in iframe
+preferch video
+
+self camera needs ssl (or local)
