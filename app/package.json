@@ -4,8 +4,8 @@
   "description": "coach-app",
   "scripts": {
     "server": "cd dist && node server.js",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --mode dev",
+    "serve": "vue-cli-service serve --no-clean",
+    "build": "vue-cli-service build --mode dev --no-clean",
     "buildprod": "vue-cli-service build",
     "builddev": "vue-cli-service build --mode dev"
   },
