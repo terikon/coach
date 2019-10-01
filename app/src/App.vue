@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+import io from 'socket.io-client'
 import aaa from './components/aaa.vue'
 import SelfCamera from './components/SelfCamera.vue'
 import StoreTest from './components/StoreTest.vue'
