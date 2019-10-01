@@ -1,4 +1,5 @@
 module.exports = {
+  filenameHashing: false,
   pages: {
     options: {
       // entry for the *public* page
