@@ -1,13 +1,34 @@
 <template>
-  <p>{{ greeting }} World!</p>
+  <div>
+    <p>{{ greeting }} World!</p>
+    <p>{{ storeState.numbers }}</p>
+    <input v-model="numberInput" type="number"/>
+    <button @click="addNumber(numberInput)">Add</button>
+  </div>
 </template>
 
 <script>
+import {EventBus} from '../event-bus.js';
+import {store} from '../store.js';
+
 export default {
-  data: function () {
+  data() {
     return {
-      greeting: 'Hello'
+      greeting: 'Hello',
+      numberInput: 0,
+      storeState: store.state,
     }
+  },
+  methods: {
+    addNumber(number) {
+      EventBus.$emit('numberAdded', Number(number));
+      store.addNumber(Number(number));
+    }
+  },
+  created() {
+    EventBus.$on('numberAdded', number => {
+      this.greeting += number;
+    });
   }
 }
 </script>
