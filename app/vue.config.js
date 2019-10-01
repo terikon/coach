@@ -24,5 +24,8 @@ module.exports = {
       // output as dist/index.html
       filename: 'index.html'
     }
+  },
+  devServer: {
+    https: true,
   }
 }
