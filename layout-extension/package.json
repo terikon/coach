@@ -12,6 +12,8 @@
   "dependencies": {
     "@types/chrome": "0.0.85",
     "@types/socket.io-client": "^1.4.32",
+    "bootstrap": "^4.3.1",
+    "bootstrap-vue": "^2.0.2",
     "socket.io": "^2.2.0",
     "vue": "^2.6.10",
     "webrtc-adapter": "^7.2.3"

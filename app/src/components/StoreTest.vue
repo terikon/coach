@@ -1,10 +1,16 @@
 <template>
-<div>
-  <p>EventBus: {{numbers}}</p>
-  <p>storeState: {{storeState.numbers}}</p>
-  <input v-model="numberInput" type="number">
-  <button @click="addNumber(numberInput)">Add</button>
-</div>
+<b-container fluid>
+  <b-row><b-col><label>EventBus: {{numbers}}</label></b-col></b-row>
+  <b-row><b-col><label>storeState: {{storeState.numbers}}</label></b-col></b-row>
+  <b-row>
+    <b-col sm="4">
+      <b-form-input v-model="numberInput" type="number"></b-form-input>
+    </b-col>
+    <b-col sm="8">
+      <b-button @click="addNumber(numberInput)">Add</b-button>
+    </b-col>
+  </b-row>
+</b-container>
 </template>
 <script>
 import {EventBus} from '../common/event-bus.js';
