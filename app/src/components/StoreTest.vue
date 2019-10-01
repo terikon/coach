@@ -1,20 +1,18 @@
 <template>
-  <div>
-    <p>{{ greeting }} World!</p>
-    <p>{{ storeState.numbers }}</p>
-    <input v-model="numberInput" type="number"/>
-    <button @click="addNumber(numberInput)">Add</button>
-  </div>
+<div>
+  <p>EventBus: {{numbers}}</p>
+  <p>storeState: {{storeState.numbers}}</p>
+  <input v-model="numberInput" type="number">
+  <button @click="addNumber(numberInput)">Add</button>
+</div>
 </template>
-
 <script>
 import {EventBus} from '../common/event-bus.js';
 import {store} from '../common/store.js';
-
 export default {
   data() {
     return {
-      numbers: [1, 2, 3],
+      numbers: [1,2,3],
       numberInput: 0,
       storeState: store.state,
     }
@@ -27,15 +25,11 @@ export default {
   },
   created() {
     EventBus.$on('numberAdded', number => {
-      this.greeting += number;
+      this.numbers.push(number);
     });
   }
 }
 </script>
+<style>
 
-<style scoped>
-p {
-  font-size: 2em;
-  text-align: center;
-}
 </style>

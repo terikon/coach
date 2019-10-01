@@ -1,7 +1,6 @@
-import moment from 'moment';
 import Vue from 'vue'
 import App from './App.vue'
 
-new Vue({
+window.app = new Vue({
   render: function (h) { return h(App) },
-}).$mount('#app')
+}).$mount('#app');

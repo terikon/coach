@@ -5,9 +5,8 @@
   "scripts": {
     "server": "cd dist && node server.js",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --mode dev",
-    "watch": "vue-cli-service build --mode dev --watch",
-    "buildandserver": "npm run build && npm run server"
+    "build": "vue-cli-service build",
+    "builddev": "vue-cli-service build --mode dev"
   },
   "dependencies": {
     "moment": "^2.24.0",
