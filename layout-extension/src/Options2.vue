@@ -1,9 +1,9 @@
 <template>
-  <HangoutsCaller></HangoutsCaller>
+
 </template>
 
 <script>
-import HangoutsCaller from './components/HangoutsCaller.vue'
+import moment from 'moment'
 
 export default {
   name: 'app',
