@@ -4,7 +4,6 @@
   "description": "",
   "main": "background.js",
   "scripts": {
-    "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --mode dev",
     "watch": "vue-cli-service build --mode dev --watch",
     "prepare": "mklink /j src\\common ..\\app\\src\\common"
@@ -14,6 +13,7 @@
     "@types/socket.io-client": "^1.4.32",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.2",
+    "moment": "^2.24.0",
     "socket.io": "^2.2.0",
     "vue": "^2.6.10",
     "webrtc-adapter": "^7.2.3"

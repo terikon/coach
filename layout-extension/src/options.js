@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
-import options from './Options2.vue'
+import optionsApp from './OptionsApp.vue'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -8,7 +8,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 Vue.use(BootstrapVue);
 
 const app = new Vue({
-  render: function (h) { return h(options) },
+  render: function (h) { return h(optionsApp) },
 }).$mount('#app');
 
 /** @type HTMLLabelElement */ const switchMode = document.getElementById('switchMode');

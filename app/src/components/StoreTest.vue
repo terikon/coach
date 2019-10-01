@@ -12,6 +12,7 @@
   </b-row>
 </b-container>
 </template>
+
 <script>
 import {EventBus} from '../common/event-bus.js';
 import {store} from '../common/store.js';
@@ -36,6 +37,7 @@ export default {
   }
 }
 </script>
+
 <style>
 
 </style>
