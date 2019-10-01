@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 module.exports = {
   pages: {
     player: {
@@ -27,5 +29,7 @@ module.exports = {
   },
   devServer: {
     https: true,
+    host: 'viskin.dyndns.org',
+    pfx: fs.readFileSync('./cert/certificate_combined.pfx'),
   }
 }
