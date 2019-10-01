@@ -6,7 +6,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --mode dev",
-    "watch": "vue-cli-service build --mode dev --watch"
+    "watch": "vue-cli-service build --mode dev --watch",
+    "prepare": "mklink /j src\\common ..\\app\\src\\common"
   },
   "dependencies": {
     "@types/chrome": "0.0.85",

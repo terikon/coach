@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import {EventBus} from '../event-bus.js';
-import {store} from '../store.js';
+import {EventBus} from '../common/event-bus.js';
+import {store} from '../common/store.js';
 
 export default {
   data() {

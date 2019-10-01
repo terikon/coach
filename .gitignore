@@ -27,3 +27,6 @@ dist/
 *.crt
 *.pfx
 *.key
+
+# directory junction
+layout-extension/src/common
